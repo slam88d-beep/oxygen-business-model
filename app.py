@@ -25,7 +25,7 @@ lang_pack = {
         "sec3": "3. 렌탈 모델",
         "sec4": "4. 구매 모델 (CAPEX + OPEX)",
         "sec5": "5. 결과 비교",
-        "sec_roi": "구매 모델 ROI 분석",
+        "sec_roi": "6. ROI 분석 (렌탈 / 구매)",
         "cyl_mode_radio": "실린더 비용 입력 방식 선택",
         "cyl_mode_direct": "월간 총 비용 직접 입력",
         "cyl_mode_calc": "실린더 개수 × 단가로 계산",
@@ -78,7 +78,7 @@ lang_pack = {
         "sec3": "3. Rental Model",
         "sec4": "4. Purchase Model (CAPEX + OPEX)",
         "sec5": "5. Cost Comparison",
-        "sec_roi": "ROI Analysis - Purchase Model",
+        "sec_roi": "6. ROI Analysis (Rental & Purchase)",
         "cyl_mode_radio": "Cylinder cost input method",
         "cyl_mode_direct": "Enter monthly total cost directly",
         "cyl_mode_calc": "Calculate: quantity × unit price",
@@ -131,7 +131,7 @@ lang_pack = {
         "sec3": "3. Mô hình thuê",
         "sec4": "4. Mô hình mua (CAPEX + OPEX)",
         "sec5": "5. So sánh chi phí",
-        "sec_roi": "Phân tích ROI - mô hình mua",
+        "sec_roi": "6. Phân tích ROI (Thuê & Mua)",
         "cyl_mode_radio": "Cách nhập chi phí bình oxy",
         "cyl_mode_direct": "Nhập trực tiếp tổng chi phí/tháng",
         "cyl_mode_calc": "Tính: số bình × đơn giá",
@@ -184,7 +184,7 @@ lang_pack = {
         "sec3": "3. គំរូជួល",
         "sec4": "4. គំរូទិញ (CAPEX + OPEX)",
         "sec5": "5. សង្ខេបប្រៀបធៀបចំណាយ",
-        "sec_roi": "វិភាគ ROI - គំរូទិញ",
+        "sec_roi": "6. វិភាគ ROI (ជួល & ទិញ)",
         "cyl_mode_radio": "វិធីបញ្ចូលចំណាយស៊ីឡាំង",
         "cyl_mode_direct": "បញ្ចូលចំណាយសរុបក្នុងមួយខែផ្ទាល់",
         "cyl_mode_calc": "គណនា៖ ចំនួនស៊ីឡាំង × តម្លៃ/ស៊ីឡាំង",
@@ -487,11 +487,17 @@ purchase_monthly_total = monthly_capex + monthly_maintenance + monthly_energy_co
 purchase_annual_total = purchase_monthly_total * 12
 purchase_five_year_total = purchase_annual_total * 5
 
-annual_saving_vs_cylinder = annual_cylinder_cost - purchase_annual_total
-if annual_saving_vs_cylinder > 0:
-    payback_years = purchase_price / annual_saving_vs_cylinder
+# 연간/5년 절감, Payback 계산
+purchase_annual_saving = annual_cylinder_cost - purchase_annual_total
+annual_saving_vs_cylinder = purchase_annual_saving  # CSV 저장용 이름 유지
+if purchase_annual_saving > 0:
+    payback_years = purchase_price / purchase_annual_saving
 else:
     payback_years = None
+
+rental_annual_saving = annual_cylinder_cost - rental_annual_total
+rental_5yr_saving = five_year_cylinder_cost - rental_five_year_total
+purchase_5yr_saving = five_year_cylinder_cost - purchase_five_year_total
 
 # -----------------------------
 # 5. 결과 비교
@@ -521,19 +527,50 @@ with colC:
 st.markdown("---")
 
 # -----------------------------
-# ROI 설명
+# 6. ROI 설명 + 1~5년 비용 그래프
 # -----------------------------
 st.header(L["sec_roi"])
 
-if annual_saving_vs_cylinder > 0:
-    st.success(L["roi_saving_success"].format(saving=annual_saving_vs_cylinder))
-else:
-    st.warning(L["roi_saving_warning"])
+col1, col2 = st.columns(2)
 
-if payback_years:
-    st.info(L["roi_payback_info"].format(years=payback_years))
-else:
-    st.info(L["roi_payback_impossible"])
+# 렌탈 ROI
+with col1:
+    st.subheader("렌탈 ROI / Rental ROI")
+    st.write(f"- 연간 절감액 / Annual saving vs Cylinder: **{rental_annual_saving:,.0f} USD**")
+    st.write(f"- 5년 누적 절감 / 5-year saving vs Cylinder: **{rental_5yr_saving:,.0f} USD**")
+    if rental_annual_saving > 0:
+        st.success("✔ 렌탈이 실린더 유지보다 연간 기준으로 비용 절감 효과가 있습니다.")
+    else:
+        st.warning("❗ 렌탈이 실린더 유지보다 비싸거나 비슷한 수준입니다.")
+
+# 구매 ROI
+with col2:
+    st.subheader("구매 ROI / Purchase ROI")
+    st.write(f"- 연간 절감액 / Annual saving vs Cylinder: **{purchase_annual_saving:,.0f} USD**")
+    st.write(f"- 5년 누적 절감 / 5-year saving vs Cylinder: **{purchase_5yr_saving:,.0f} USD**")
+    if purchase_annual_saving > 0:
+        st.success(L["roi_saving_success"].format(saving=purchase_annual_saving))
+        if payback_years:
+            st.info(L["roi_payback_info"].format(years=payback_years))
+    else:
+        st.warning(L["roi_saving_warning"])
+        st.info(L["roi_payback_impossible"])
+
+# 1~5년 비용 추이 그래프
+years = [1, 2, 3, 4, 5]
+cyl_costs = [annual_cylinder_cost * y for y in years]
+rental_costs = [rental_annual_total * y for y in years]
+purchase_costs = [purchase_annual_total * y for y in years]
+
+df_years = pd.DataFrame({
+    "Year": years,
+    "Cylinder": cyl_costs,
+    "Rental": rental_costs,
+    "Purchase": purchase_costs,
+}).set_index("Year")
+
+st.subheader("1~5년 비용 추이 / Cost over 1–5 years")
+st.line_chart(df_years)
 
 st.caption(L["footer"])
 
@@ -543,7 +580,6 @@ st.markdown("---")
 # 🔶 인쇄 버튼
 # -----------------------------
 if st.button(L["print_button"]):
-    # 브라우저의 인쇄 대화상자 호출 (일부 환경에서만 동작)
     st.markdown(
         """
         <script>
@@ -558,7 +594,6 @@ if st.button(L["print_button"]):
 # -----------------------------
 st.subheader(L["save_button"])
 
-# 정리해서 한 줄(summary)로 저장
 summary = {
     "hospital_name": hospital_name if hospital_name else "",
     "country": country,
@@ -572,7 +607,10 @@ summary = {
     "purchase_monthly_total": round(purchase_monthly_total, 2),
     "purchase_annual_total": round(purchase_annual_total, 2),
     "purchase_five_year_total": round(purchase_five_year_total, 2),
-    "annual_saving_vs_cylinder": round(annual_saving_vs_cylinder, 2),
+    "rental_annual_saving_vs_cylinder": round(rental_annual_saving, 2),
+    "rental_5year_saving_vs_cylinder": round(rental_5yr_saving, 2),
+    "purchase_annual_saving_vs_cylinder": round(purchase_annual_saving, 2),
+    "purchase_5year_saving_vs_cylinder": round(purchase_5yr_saving, 2),
     "payback_years": round(payback_years, 2) if payback_years else "",
     "generator_flow_lpm": generator_flow_lpm,
     "daily_cylinders_equiv": round(cylinders_per_day_equiv, 2),
