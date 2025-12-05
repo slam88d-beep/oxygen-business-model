@@ -54,7 +54,7 @@ lang_pack = {
         "metric_month": "월 비용 (USD)",
         "metric_year": "연간 비용 (USD)",
         "metric_5year": "5년 비용 (USD)",
-        "roi_saving_success": "✔ 구매 시 실린더 대비 연간 {saving:,0f} USD 절감 예상",
+        "roi_saving_success": "✔ 구매 시 실린더 대비 연간 {saving:,.0f} USD 절감 예상",
         "roi_saving_warning": "❗ 구매 모델이 실린더보다 비용이 높거나 비슷합니다.",
         "roi_payback_info": "▶ 투자 회수 기간: 약 {years:.1f}년",
         "roi_payback_impossible": "투자 회수 계산이 불가능하거나 적자가 예상됩니다.",
@@ -160,19 +160,19 @@ lang_pack = {
         "metric_month": "Chi phí/tháng (USD)",
         "metric_year": "Chi phí/năm (USD)",
         "metric_5year": "Chi phí 5 năm (USD)",
-        "roi_saving_success": "✔ Mua máy giúp tiết kiệm khoảng {saving:,0f} USD/năm so với chỉ dùng bình.",
+        "roi_saving_success": "✔ Mua máy giúp tiết kiệm khoảng {saving:,.0f} USD/năm so với chỉ dùng bình.",
         "roi_saving_warning": "❗ Với số liệu hiện tại, mô hình mua không rẻ hơn dùng bình.",
         "roi_payback_info": "▶ Thời gian hoàn vốn ước tính: {years:.1f} năm",
         "roi_payback_impossible": "Không thể hoàn vốn hoặc hoàn vốn âm với số liệu hiện tại.",
         "footer": "※ Cần điều chỉnh số liệu cho phù hợp với từng bệnh viện."
     },
     "km": {
-        "lang_label": "ជ្រើសរើស​ភាសា",
+        "lang_label": "ជ្រើសរើសភាសា",
         "lang_display": "ភាសាខ្មែរ",
         "country_label": "ប្រទេស",
         "sidebar_basic": "ការកំណត់មូលដ្ឋាន",
         "sidebar_hint": "សូមបញ្ចូលទិន្នន័យតាមស្ថានភាពពិតរបស់មន្ទីរពេទ្យជាមួយអតិថិជន។",
-        "title": "គណនាម៉ូដែល​អាជីវកម្ម​ម៉ាស៊ីនផលិតអុកស៊ីសែន",
+        "title": "គណនាម៉ូដែលអាជីវកម្មម៉ាស៊ីនផលិតអុកស៊ីសែន",
         "subtitle": "ការប្រៀបធៀបជួល និងទិញ (ROI) ប្រៀបធៀបនឹងប្រើស៊ីឡាំងតែប៉ុណ្ណោះ",
         "hospital_name_label": "បញ្ចូលឈ្មោះមន្ទីរពេទ្យ",
         "print_button": "បោះពុម្ពទំព័រនេះ (Ctrl+P)",
@@ -194,7 +194,7 @@ lang_pack = {
         "cyl_cost_per_unit": "ថ្លៃស៊ីឡាំងមួយ (រួមទាំងបញ្ចូលឧស្ម័ន និងដឹកជញ្ជូន, USD)",
         "usage_percent": "ជាក់ស្តែងប្រើបានប្រហែលប៉ុន្មាន % នៃស៊ីឡាំង (40L, 150BAR) មុនពេលប្ដូរ?",
         "usage_info_prefix": "ចំណាយក្នុងមួយខែ ប្រសិនបើប្រើ 100%",
-        "usage_info_mid": "→ ជាមួយតម្លៃភាគរយនេះ ចំណាយពិតក្នុងមួយខែ​គឺ",
+        "usage_info_mid": "→ ជាមួយតម្លៃភាគរយនេះ ចំណាយពិតក្នុងមួយខែគឺ",
         "usage_info_suffix": "",
         "energy_info": "📌 ចំណាយអគ្គិសនីបើកម៉ាស៊ីនក្នុងមួយខែ ≈",
         "gen_flow": "លំហូរអុកស៊ីសែនពីម៉ាស៊ីន (LPM)",
@@ -213,7 +213,7 @@ lang_pack = {
         "metric_month": "ចំណាយក្នុងមួយខែ (USD)",
         "metric_year": "ចំណាយក្នុងមួយឆ្នាំ (USD)",
         "metric_5year": "ចំណាយរយៈពេល 5 ឆ្នាំ (USD)",
-        "roi_saving_success": "✔ ទិញម៉ាស៊ីនអាចសន្សំបានប្រហែល {saving:,0f} USD ក្នុងមួយឆ្នាំ ប្រៀបធៀបនឹងប្រើស៊ីឡាំងប៉ុណ្ណោះ។",
+        "roi_saving_success": "✔ ទិញម៉ាស៊ីនអាចសន្សំបានប្រហែល {saving:,.0f} USD ក្នុងមួយឆ្នាំ ប្រៀបធៀបនឹងប្រើស៊ីឡាំងប៉ុណ្ណោះ។",
         "roi_saving_warning": "❗ ជាមួយទិន្នន័យបច្ចុប្បន្ន គំរូទិញមិនសន្សំចំណាយជាងប្រើស៊ីឡាំងទេ។",
         "roi_payback_info": "▶ រយៈពេលសងទុនប្រហែល {years:.1f} ឆ្នាំ",
         "roi_payback_impossible": "មិនអាចសងទុនឬអាចនឹងខាតបង់ទុនជាមួយទិន្នន័យបច្ចុប្បន្ន។",
@@ -327,8 +327,8 @@ with tab_hospital:
     monthly_cylinder_cost = monthly_cylinder_cost_base * (100 / usage_percent)
 
     st.info(
-        f"{L['usage_info_prefix']}: {monthly_cylinder_cost_base:,0f} USD → "
-        f"{usage_percent}% {L['usage_info_mid']} **{monthly_cylinder_cost:,0f} USD** {L['usage_info_suffix']}"
+        f"{L['usage_info_prefix']}: {monthly_cylinder_cost_base:,.0f} USD → "
+        f"{usage_percent}% {L['usage_info_mid']} **{monthly_cylinder_cost:,.0f} USD** {L['usage_info_suffix']}"
     )
 
     annual_cylinder_cost = monthly_cylinder_cost * 12
@@ -370,8 +370,8 @@ with tab_hospital:
     annual_energy_cost = monthly_energy_cost * 12
 
     st.write(
-        f"{L['energy_info']} **{monthly_energy_cost:,0f} USD** "
-        f"(≈ {annual_energy_cost:,0f} USD / year)"
+        f"{L['energy_info']} **{monthly_energy_cost:,.0f} USD** "
+        f"(≈ {annual_energy_cost:,.0f} USD / year)"
     )
 
     # -----------------------------
@@ -515,21 +515,21 @@ with tab_hospital:
 
     with colA:
         st.subheader(L["colA_title"])
-        st.metric(L["metric_month"], f"{monthly_cylinder_cost:,0f}")
-        st.metric(L["metric_year"], f"{annual_cylinder_cost:,0f}")
-        st.metric(L["metric_5year"], f"{five_year_cylinder_cost:,0f}")
+        st.metric(L["metric_month"], f"{monthly_cylinder_cost:,.0f}")
+        st.metric(L["metric_year"], f"{annual_cylinder_cost:,.0f}")
+        st.metric(L["metric_5year"], f"{five_year_cylinder_cost:,.0f}")
 
     with colB:
         st.subheader(L["colB_title"])
-        st.metric(L["metric_month"], f"{rental_monthly_total:,0f}")
-        st.metric(L["metric_year"], f"{rental_annual_total:,0f}")
-        st.metric(L["metric_5year"], f"{rental_five_year_total:,0f}")
+        st.metric(L["metric_month"], f"{rental_monthly_total:,.0f}")
+        st.metric(L["metric_year"], f"{rental_annual_total:,.0f}")
+        st.metric(L["metric_5year"], f"{rental_five_year_total:,.0f}")
 
     with colC:
         st.subheader(L["colC_title"])
-        st.metric(L["metric_month"], f"{purchase_monthly_total:,0f}")
-        st.metric(L["metric_year"], f"{purchase_annual_total:,0f}")
-        st.metric(L["metric_5year"], f"{purchase_five_year_total:,0f}")
+        st.metric(L["metric_month"], f"{purchase_monthly_total:,.0f}")
+        st.metric(L["metric_year"], f"{purchase_annual_total:,.0f}")
+        st.metric(L["metric_5year"], f"{purchase_five_year_total:,.0f}")
 
     st.markdown("---")
 
@@ -553,8 +553,8 @@ with tab_hospital:
     # 구매 ROI
     with col2:
         st.subheader("구매 ROI / Purchase ROI")
-        st.write(f"- 연간 절감액 / Annual saving vs Cylinder: **{purchase_annual_saving:,0f} USD**")
-        st.write(f"- 5년 누적 절감 / 5-year saving vs Cylinder: **{purchase_5yr_saving:,0f} USD**")
+        st.write(f"- 연간 절감액 / Annual saving vs Cylinder: **{purchase_annual_saving:,.0f} USD**")
+        st.write(f"- 5년 누적 절감 / 5-year saving vs Cylinder: **{purchase_5yr_saving:,.0f} USD**")
         if purchase_annual_saving > 0:
             st.success(L["roi_saving_success"].format(saving=purchase_annual_saving))
             if payback_years:
