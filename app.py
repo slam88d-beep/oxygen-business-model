@@ -328,9 +328,9 @@ with tab_hospital:
 
     st.info(
         f"{L['usage_info_prefix']}: {round(monthly_cylinder_cost_base) USD, "
-        f"{usage_percent}% {L['usage_info_mid']} **{round(monthly_cylinder_cost) USD** {L['usage_info_suffix']}"
+        f"{usage_percent}% 사용 시 실질 비용: {round(monthly_cylinder_cost) USD** {L['usage_info_suffix']}"
     )
-
+(info_text)
     annual_cylinder_cost = monthly_cylinder_cost * 12
     five_year_cylinder_cost = annual_cylinder_cost * 5
 
