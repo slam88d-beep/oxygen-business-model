@@ -708,13 +708,13 @@ with tab_dealer:
 
     col_s1, col_s2 = st.columns(2)
     with col_s1:
-        st.metric("한 대당 이익 / Margin per unit (USD)", f"{unit_margin:,.0f}")
+        st.metric("한 대당 이익 / Margin per unit (USD)", f"{round(unit_margin):,}")
     with col_s2:
-        st.metric("마진율 / Margin rate (%)", f"{margin_rate:,.1f}%")
+        st.metric("마진율 / Margin rate (%)", f"{margin_rate:.1f}%")
 
     st.markdown(
-        f"- 리테일러는 한 대 판매 시 **약 {unit_margin:,.0f} USD** 이익을 얻습니다.\n"
-        f"- 판매가 기준 마진율은 **약 {margin_rate:,.1f}%** 입니다."
+        f"- 리테일러는 한 대 판매 시 **약 {round(unit_margin):,} USD** 이익을 얻습니다.\n"
+        f"- 판매가 기준 마진율은 **약 {margin_rate:.1f}%** 입니다."
     )
 
     st.markdown("---")
@@ -734,52 +734,67 @@ with tab_dealer:
 
     col_r1, col_r2, col_r3 = st.columns(3)
     with col_r1:
-        st.metric("초기 투자금 / Initial investment (USD)", f"{initial_invest:,.0f}")
+        st.metric("초기 투자금 / Initial investment (USD)", f"{round(initial_invest):,}")
     with col_r2:
-        st.metric("연간 순이익 / Annual net profit (USD)", f"{annual_profit:,.0f}")
+        st.metric("연간 순이익 / Annual net profit (USD)", f"{round(annual_profit):,}")
     with col_r3:
         if payback_years_dealer:
-            st.metric("투자 회수기간 / Payback (years)", f"{payback_years_dealer:,.1f}")
+            st.metric("투자 회수기간 / Payback (years)", f"{payback_years_dealer:.1f}")
         else:
             st.metric("투자 회수기간 / Payback", "N/A")
 
     st.write(
-        f"- 계약 {rental_contract_years}년 기준, 총 예상 순이익은 "
-        f"**{total_profit_contract:,.0f} USD** 입니다."
+        f"- 계약 {rental_contract_years}년 기준, 렌탈 1대 총 예상 순이익은 "
+        f"**{round(total_profit_contract):,} USD** 입니다."
     )
 
     st.markdown("---")
 
-    # 📈 누적 현금흐름 그래프
-    st.subheader("📈 누적 현금흐름 (Cumulative Cash Flow)")
+    # 📈 누적 현금흐름 그래프 (판매 vs 렌탈)
+    st.subheader("📈 누적 현금흐름 (Cumulative Cash Flow) – 판매 vs 렌탈")
 
     years_cf = list(range(0, rental_contract_years + 1))
-    cash_flow = []
+    cash_rental = []
+    cash_sale = []
+
     for y in years_cf:
         if y == 0:
-            cash_flow.append(-initial_invest)
+            # 연 0 : 렌탈은 투자만, 판매는 이익만
+            cash_rental.append(-initial_invest)
+            cash_sale.append(unit_margin)
         else:
-            cash_flow.append(-initial_invest + annual_profit * y)
+            cash_rental.append(-initial_invest + annual_profit * y)
+            # 판매 모델은 연 0에 이미 이익 확정, 이후 동일
+            cash_sale.append(unit_margin)
 
     df_cash = pd.DataFrame(
-        {"Year": years_cf, "Cumulative Cash Flow (USD)": cash_flow}
+        {
+            "Year": years_cf,
+            "Rental": cash_rental,
+            "Sale": cash_sale,
+        }
     ).set_index("Year")
 
     st.line_chart(df_cash)
 
-    # 📊 계약기간별 총 순이익 그래프
-    st.subheader("📊 1년~계약기간까지 총 순이익 (Total Profit by Year)")
+    # 📊 연도별 누적 순이익 – 판매 vs 렌탈
+    st.subheader("📊 연도별 누적 순이익 (Total Profit by Year) – 판매 vs 렌탈")
 
     years_profit = list(range(1, rental_contract_years + 1))
-    total_profits = [annual_profit * y for y in years_profit]
+    sale_profits = [unit_margin for _ in years_profit]          # 판매는 연도 상관없이 동일 이익
+    rental_profits = [annual_profit * y for y in years_profit]  # 렌탈은 년수에 따라 증가
 
     df_profit = pd.DataFrame(
-        {"Year": years_profit, "Total Profit (USD)": total_profits}
+        {
+            "Year": years_profit,
+            "Sale": sale_profits,
+            "Rental": rental_profits,
+        }
     ).set_index("Year")
 
     st.bar_chart(df_profit)
 
     st.caption(
-        "※ 이 탭은 리테일러(딜러) 입장에서의 수익성을 보여줍니다. "
+        "※ 이 탭은 리테일러(딜러) 입장에서 **단순 판매 vs 렌탈** 수익을 비교해 줍니다. "
         "병원 ROI는 왼쪽 탭에서 확인하세요."
     )
