@@ -327,8 +327,8 @@ with tab_hospital:
     monthly_cylinder_cost = monthly_cylinder_cost_base * (100 / usage_percent)
 
     st.info(
-        f"{L['usage_info_prefix']}: {monthly_cylinder_cost_base:,.0f} USD → "
-        f"{usage_percent}% {L['usage_info_mid']} **{monthly_cylinder_cost:,.0f} USD** {L['usage_info_suffix']}"
+        f"{L['usage_info_prefix']}: {round(monthly_cylinder_cost_base) USD → "
+        f"{usage_percent}% {L['usage_info_mid']} **{round(monthly_cylinder_cost) USD** {L['usage_info_suffix']}"
     )
 
     annual_cylinder_cost = monthly_cylinder_cost * 12
