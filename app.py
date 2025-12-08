@@ -528,10 +528,8 @@ with tab_dealer:
         t_import_cost = "수입·통관비용 (USD)"
         t_sale_price = "병원 판매가 (USD)"
         t_install_cost = "설치·교육 등 초기 비용 (USD, 일회성)"
-        t_annual_service = (
-            "연간 서비스·유지보수비용 (판매모델용, USD/년)\n"
-            "※ 1년차는 무상 워런티, 2년차부터 발생"
-        )
+        t_service_fee = "연간 서비스 계약 금액 (병원 청구, USD/년)"
+        t_service_cost = "연간 서비스 제공 원가 (리테일러 비용, USD/년)"
         t_rental_fee = "병원 월 렌탈료 (USD)"
         t_contract_years = "렌탈 계약기간 (년)"
         t_sec_sale = "1) 단순 판매 모델"
@@ -539,9 +537,12 @@ with tab_dealer:
         t_metric_initial_cost = "초기 총 원가 (USD)"
         t_metric_margin = "한 대당 초기 이익 (USD)"
         t_metric_margin_rate = "마진율 (%)"
+        t_metric_service_net = "연간 서비스 순이익 (USD)"
         t_sale_text_1 = "공급가 + 통관 + 설치를 포함한 한 대당 총 원가입니다."
         t_sale_text_2 = "병원 판매 시 초기 이익과 마진율입니다."
-        t_sale_text_3 = "1년차는 무상 워런티, 2년차부터 서비스/유지보수 비용이 발생한다고 가정합니다."
+        t_sale_text_3 = (
+            "판매 후 2년차부터는 서비스 계약을 통해 매년 서비스 순이익이 발생한다고 가정합니다."
+        )
         t_metric_initial_invest = "초기 투자금 (USD)"
         t_metric_annual_profit = "연간 순이익 (USD)"
         t_metric_payback = "투자 회수기간 (년)"
@@ -563,10 +564,8 @@ with tab_dealer:
         t_import_cost = "Import & customs cost (USD)"
         t_sale_price = "Sales price to hospital (USD)"
         t_install_cost = "Installation & training cost (USD, one-time)"
-        t_annual_service = (
-            "Annual service / maintenance cost (sales model, USD/year)\n"
-            "※ Year 1 is free warranty, cost applies from year 2."
-        )
+        t_service_fee = "Annual service contract fee charged to hospital (USD/year)"
+        t_service_cost = "Annual service delivery cost for dealer (USD/year)"
         t_rental_fee = "Monthly rental fee to hospital (USD)"
         t_contract_years = "Rental contract period (years)"
         t_sec_sale = "1) One-off sales model"
@@ -574,9 +573,12 @@ with tab_dealer:
         t_metric_initial_cost = "Initial total cost (USD)"
         t_metric_margin = "Margin per unit (USD)"
         t_metric_margin_rate = "Margin rate (%)"
+        t_metric_service_net = "Annual service net profit (USD)"
         t_sale_text_1 = "Total cost per unit including factory price, import and installation."
         t_sale_text_2 = "Initial margin and margin rate when selling to a hospital."
-        t_sale_text_3 = "Year 1 is free warranty; annual service cost is charged from year 2."
+        t_sale_text_3 = (
+            "From year 2, an annual service contract generates additional net profit."
+        )
         t_metric_initial_invest = "Initial investment (USD)"
         t_metric_annual_profit = "Annual net profit (USD)"
         t_metric_payback = "Payback period (years)"
@@ -622,8 +624,14 @@ with tab_dealer:
         )
 
     with col2:
-        dealer_annual_service_cost = st.number_input(
-            t_annual_service,
+        service_fee_year = st.number_input(
+            t_service_fee,
+            min_value=0.0,
+            value=1500.0,
+            step=100.0,
+        )
+        service_cost_year = st.number_input(
+            t_service_cost,
             min_value=0.0,
             value=800.0,
             step=100.0,
@@ -647,6 +655,9 @@ with tab_dealer:
     # 공통: 한 대 기준 초기 총 원가
     initial_unit_cost = factory_price + import_cost + dealer_install_cost
 
+    # 서비스 계약 연간 순이익 (리테일러 입장)
+    service_net_profit_year = service_fee_year - service_cost_year
+
     # ① 단순 판매 모델
     st.subheader(t_sec_sale)
 
@@ -660,6 +671,8 @@ with tab_dealer:
         st.metric(t_metric_margin, f"{round(sale_initial_margin):,}")
     with col_s3:
         st.metric(t_metric_margin_rate, f"{sale_margin_rate:.1f}")
+
+    st.metric(t_metric_service_net, f"{round(service_net_profit_year):,}")
 
     st.markdown(
         f"- {t_sale_text_1} ≈ {round(initial_unit_cost):,} USD\n"
@@ -708,12 +721,17 @@ with tab_dealer:
 
     for y in years_cf:
         if y == 0:
+            # 연 0: 판매는 장비 판매 마진만, 렌탈은 초기 투자만
             cash_rental.append(-initial_invest_rental)
             cash_sale.append(sale_initial_margin)
         else:
+            # 렌탈: 초기 투자 + 매년 렌탈 수익
             rental_cf = -initial_invest_rental + annual_profit_rental * y
-            service_years = max(0, y - 1)  # 1년차 0, 2년차부터 서비스비 발생
-            sale_cf = sale_initial_margin - dealer_annual_service_cost * service_years
+
+            # 판매: 초기 마진 + (2년차부터 서비스 순이익 누적)
+            service_years = max(0, y - 1)
+            sale_cf = sale_initial_margin + service_net_profit_year * service_years
+
             cash_rental.append(rental_cf)
             cash_sale.append(sale_cf)
 
@@ -735,7 +753,7 @@ with tab_dealer:
         rental_profits.append(rental_total)
 
         service_years = max(0, y - 1)
-        sale_total = sale_initial_margin - dealer_annual_service_cost * service_years
+        sale_total = sale_initial_margin + service_net_profit_year * service_years
         sale_profits.append(sale_total)
 
     df_profit = pd.DataFrame(
