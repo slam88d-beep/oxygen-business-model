@@ -3,226 +3,105 @@ import pandas as pd
 import io
 
 # =========================
-# 🔶 Multi-language dictionary
+# 다국어 텍스트 정의
 # =========================
 
 lang_pack = {
     "ko": {
-        "lang_label": "언어 선택",
         "lang_display": "한국어",
-        "country_label": "국가 선택",
         "sidebar_basic": "기본 설정",
+        "country_label": "국가 선택",
         "sidebar_hint": "현장에서 병원 담당자와 함께 값을 입력해보세요.",
         "title": "산소발생기 비즈니스 모델 계산기",
-        "subtitle": "캄보디아 / 베트남 병원 대상 렌탈 vs 구매(ROI) vs 실린더 유지 비교 데모",
+        "subtitle": "병원 대상 실린더 vs 렌탈 vs 구매(ROI) 비교",
         "hospital_name_label": "병원 이름을 입력하세요",
-        "print_button": "화면 인쇄하기 (Ctrl+P)",
-        "save_button": "현재 시나리오를 파일로 저장 (CSV 다운로드)",
-        "save_note": "※ 저장된 CSV 파일을 모아서 병원별 비교·관리 자료로 활용할 수 있습니다.",
         "sec1": "1. 현재 실린더 사용 비용",
-        "sec2": "2. 산소발생기 운전 조건 및 전기요금",
-        "sec2_1": "2-1. 산소발생기 산소 생산량 vs 실린더 용량 비교",
-        "sec3": "3. 렌탈 모델",
-        "sec4": "4. 구매 모델 (CAPEX + OPEX)",
-        "sec5": "5. 결과 비교",
-        "sec_roi": "6. ROI 분석 (렌탈 / 구매)",
         "cyl_mode_radio": "실린더 비용 입력 방식 선택",
         "cyl_mode_direct": "월간 총 비용 직접 입력",
         "cyl_mode_calc": "실린더 개수 × 단가로 계산",
         "days_per_month": "월 기준 일수 (일)",
         "cyl_monthly_direct": "현재 실린더 월간 총 비용 (USD)",
         "cyl_daily_qty": "하루 실린더 사용 개수 (EA)",
-        "cyl_cost_per_unit": "실린더 1개당 비용 (충전+물류 포함, USD)",
+        "cyl_cost_per_unit": "실린더 1개당 가스 비용 (USD)",
+        "cyl_delivery_per_unit": "실린더 1개당 배송/물류 비용 (USD)",
         "usage_percent": "실제로 실린더(40L, 150BAR)를 몇 %까지 사용하고 교체하나요?",
         "usage_info_prefix": "100% 사용 기준 월 비용",
-        "usage_info_mid": "사용 후 교체 시 실질 비용은",
-        "usage_info_suffix": "입니다.",
-        "energy_info": "📌 전기요금 기준 산소발생기 운영비 = 월",
+        "sec2": "2. 산소발생기 운전 조건 및 전기요금",
+        "sec2_1": "2-1. 산소발생기 산소 생산량 vs 실린더 용량",
         "gen_flow": "산소발생기 유량 (LPM)",
         "cyl_volume": "실린더 용적 (L)",
         "cyl_pressure": "실린더 충전 압력 (BAR)",
-        "gen_vs_cyl_line": "👉 산소발생기 1대 = 하루 {day_cyl:.1f} 병/일, 약 {mon_cyl:.0f} 병/월 공급량과 동일",
+        "sec3": "3. 렌탈 모델 (OPEX)",
         "rental_monthly_fee": "월 렌탈료 (USD)",
         "rental_includes_maint": "렌탈료에 유지보수 포함",
         "rental_extra_maint": "추가 유지보수비 (월, USD)",
+        "sec4": "4. 구매 모델 (CAPEX + OPEX)",
         "purchase_price": "장비 구매 가격 (USD)",
         "maintenance_annual": "연간 유지보수 비용 (USD)",
-        "amort_years": "투자 회수(감가) 기간 (년)",
+        "amort_years": "감가 기간 (년, 회계용)",
+        "sec5": "5. 결과 요약 및 비교",
         "colA_title": "실린더 유지",
         "colB_title": "렌탈 모델",
         "colC_title": "구매 모델",
         "metric_month": "월 비용 (USD)",
         "metric_year": "연간 비용 (USD)",
-        "metric_5year": "5년 비용 (USD)",
-        "roi_saving_success": "✔ 구매 시 실린더 대비 연간 {saving:,.0f} USD 절감 예상",
-        "roi_saving_warning": "❗ 구매 모델이 실린더보다 비용이 높거나 비슷합니다.",
-        "roi_payback_info": "▶ 투자 회수 기간: 약 {years:.1f}년",
-        "roi_payback_impossible": "투자 회수 계산이 불가능하거나 적자가 예상됩니다.",
-        "footer": "※ 실제 데이터 기반 제안 시 입력값을 조정하세요."
+        "metric_5year": "5년 누적 비용 (USD)",
+        "sec_roi": "6. ROI 분석 및 1~5년 비용 추이",
+        "footer": "※ 실제 제안 시에는 각 병원의 실제 데이터에 맞게 조정해야 합니다.",
+        "print_button": "현재 화면 인쇄하기 (브라우저 인쇄 기능 사용)",
+        "save_button": "현재 병원 시나리오를 CSV로 저장",
+        "save_note": "저장된 CSV 파일을 모아서 병원별 비교·관리 자료로 활용할 수 있습니다.",
     },
     "en": {
-        "lang_label": "Language",
         "lang_display": "English",
+        "sidebar_basic": "Basic settings",
         "country_label": "Country",
-        "sidebar_basic": "Basic Settings",
-        "sidebar_hint": "Enter hospital-specific values together with the client.",
+        "sidebar_hint": "Enter values together with the hospital staff.",
         "title": "Oxygen Business Model Calculator",
-        "subtitle": "Rental vs Purchase (ROI) vs Cylinder-only Cost Demo for Hospitals",
-        "hospital_name_label": "Enter hospital name",
-        "print_button": "Print this view (Ctrl+P)",
-        "save_button": "Save current scenario as CSV",
-        "save_note": "※ You can collect these CSVs to manage and compare hospitals.",
-        "sec1": "1. Current Cylinder Oxygen Cost",
-        "sec2": "2. Oxygen Generator Operation & Electricity Cost",
-        "sec2_1": "2-1. Generator Oxygen Production vs Cylinder Capacity",
-        "sec3": "3. Rental Model",
-        "sec4": "4. Purchase Model (CAPEX + OPEX)",
-        "sec5": "5. Cost Comparison",
-        "sec_roi": "6. ROI Analysis (Rental & Purchase)",
-        "cyl_mode_radio": "Cylinder cost input method",
+        "subtitle": "Cylinder vs Rental vs Purchase (ROI) for Hospitals",
+        "hospital_name_label": "Hospital name",
+        "sec1": "1. Current cylinder oxygen cost",
+        "cyl_mode_radio": "Cylinder cost input mode",
         "cyl_mode_direct": "Enter monthly total cost directly",
-        "cyl_mode_calc": "Calculate: quantity × unit price",
+        "cyl_mode_calc": "Calculate: cylinders × unit price",
         "days_per_month": "Number of days per month",
         "cyl_monthly_direct": "Current monthly cylinder cost (USD)",
         "cyl_daily_qty": "Number of cylinders per day (EA)",
-        "cyl_cost_per_unit": "Cost per cylinder (incl. refill & logistics, USD)",
-        "usage_percent": "Up to what % of a cylinder (40L, 150BAR) is actually used before replacement?",
-        "usage_info_prefix": "Monthly cost assuming 100% usage",
-        "usage_info_mid": "→ with replacement at this % usage, effective monthly cost is",
-        "usage_info_suffix": "",
-        "energy_info": "📌 Electricity-based generator operating cost per month =",
+        "cyl_cost_per_unit": "Gas cost per cylinder (USD)",
+        "cyl_delivery_per_unit": "Delivery / logistics cost per cylinder (USD)",
+        "usage_percent": "Up to what % of a 40L 150BAR cylinder is used before replacement?",
+        "usage_info_prefix": "Monthly cost if 100% of each cylinder is used",
+        "sec2": "2. Generator operation & electricity cost",
+        "sec2_1": "2-1. Generator oxygen production vs cylinder capacity",
         "gen_flow": "Generator flow rate (LPM)",
         "cyl_volume": "Cylinder water volume (L)",
         "cyl_pressure": "Cylinder charge pressure (BAR)",
-        "gen_vs_cyl_line": "👉 One generator ≈ {day_cyl:.1f} cylinders/day, about {mon_cyl:.0f} cylinders/month",
+        "sec3": "3. Rental model (OPEX)",
         "rental_monthly_fee": "Monthly rental fee (USD)",
         "rental_includes_maint": "Maintenance included in rental fee",
         "rental_extra_maint": "Additional maintenance cost (per month, USD)",
+        "sec4": "4. Purchase model (CAPEX + OPEX)",
         "purchase_price": "Generator purchase price (USD)",
         "maintenance_annual": "Annual maintenance cost (USD)",
-        "amort_years": "Payback / depreciation period (years)",
-        "colA_title": "Cylinder Only",
-        "colB_title": "Rental Model",
-        "colC_title": "Purchase Model",
+        "amort_years": "Depreciation period (years, accounting view)",
+        "sec5": "5. Summary and comparison",
+        "colA_title": "Cylinder only",
+        "colB_title": "Rental model",
+        "colC_title": "Purchase model",
         "metric_month": "Monthly cost (USD)",
         "metric_year": "Annual cost (USD)",
-        "metric_5year": "5-year cost (USD)",
-        "roi_saving_success": "✔ Purchase saves approx. {saving:,.0f} USD per year vs cylinders.",
-        "roi_saving_warning": "❗ Purchase model is not cheaper than cylinders with current inputs.",
-        "roi_payback_info": "▶ Estimated payback period: {years:.1f} years",
-        "roi_payback_impossible": "Payback cannot be achieved or would be negative with current inputs.",
-        "footer": "※ Adjust inputs to reflect the actual hospital situation."
-    },
-    "vi": {
-        "lang_label": "Chọn ngôn ngữ",
-        "lang_display": "Tiếng Việt",
-        "country_label": "Quốc gia",
-        "sidebar_basic": "Cài đặt cơ bản",
-        "sidebar_hint": "Nhập số liệu theo thực tế của bệnh viện cùng với khách hàng.",
-        "title": "Công cụ tính mô hình kinh doanh máy tạo oxy",
-        "subtitle": "Demo so sánh Thuê vs Mua (ROI) so với dùng bình oxy cho bệnh viện",
-        "hospital_name_label": "Nhập tên bệnh viện",
-        "print_button": "In màn hình này (Ctrl+P)",
-        "save_button": "Lưu kịch bản hiện tại thành file CSV",
-        "save_note": "※ Có thể gom các file CSV để quản lý và so sánh theo từng bệnh viện.",
-        "sec1": "1. Chi phí sử dụng bình oxy hiện tại",
-        "sec2": "2. Điều kiện vận hành & chi phí điện của máy tạo oxy",
-        "sec2_1": "2-1. Sản lượng oxy máy tạo vs dung tích bình oxy",
-        "sec3": "3. Mô hình thuê",
-        "sec4": "4. Mô hình mua (CAPEX + OPEX)",
-        "sec5": "5. So sánh chi phí",
-        "sec_roi": "6. Phân tích ROI (Thuê & Mua)",
-        "cyl_mode_radio": "Cách nhập chi phí bình oxy",
-        "cyl_mode_direct": "Nhập trực tiếp tổng chi phí/tháng",
-        "cyl_mode_calc": "Tính: số bình × đơn giá",
-        "days_per_month": "Số ngày trong tháng",
-        "cyl_monthly_direct": "Tổng chi phí bình oxy/tháng (USD)",
-        "cyl_daily_qty": "Số bình oxy sử dụng mỗi ngày (bình/ngày)",
-        "cyl_cost_per_unit": "Chi phí 1 bình (gồm nạp & vận chuyển, USD)",
-        "usage_percent": "Thực tế dùng khoảng bao nhiêu % dung tích bình (40L, 150BAR) trước khi thay?",
-        "usage_info_prefix": "Chi phí/tháng nếu dùng 100%",
-        "usage_info_mid": "→ với tỷ lệ sử dụng này, chi phí thực tế/tháng là",
-        "usage_info_suffix": "",
-        "energy_info": "📌 Chi phí điện vận hành máy tạo oxy/tháng ≈",
-        "gen_flow": "Lưu lượng máy tạo oxy (LPM)",
-        "cyl_volume": "Thể tích bình (L)",
-        "cyl_pressure": "Áp suất nạp bình (BAR)",
-        "gen_vs_cyl_line": "👉 1 máy tạo oxy ≈ {day_cyl:.1f} bình/ngày, khoảng {mon_cyl:.0f} bình/tháng",
-        "rental_monthly_fee": "Phí thuê máy/tháng (USD)",
-        "rental_includes_maint": "Đã bao gồm bảo trì trong phí thuê",
-        "rental_extra_maint": "Chi phí bảo trì bổ sung/tháng (USD)",
-        "purchase_price": "Giá mua máy (USD)",
-        "maintenance_annual": "Chi phí bảo trì hàng năm (USD)",
-        "amort_years": "Thời gian hoàn vốn/khấu hao (năm)",
-        "colA_title": "Chỉ dùng bình oxy",
-        "colB_title": "Mô hình thuê",
-        "colC_title": "Mô hình mua",
-        "metric_month": "Chi phí/tháng (USD)",
-        "metric_year": "Chi phí/năm (USD)",
-        "metric_5year": "Chi phí 5 năm (USD)",
-        "roi_saving_success": "✔ Mua máy giúp tiết kiệm khoảng {saving:,.0f} USD/năm so với chỉ dùng bình.",
-        "roi_saving_warning": "❗ Với số liệu hiện tại, mô hình mua không rẻ hơn dùng bình.",
-        "roi_payback_info": "▶ Thời gian hoàn vốn ước tính: {years:.1f} năm",
-        "roi_payback_impossible": "Không thể hoàn vốn hoặc hoàn vốn âm với số liệu hiện tại.",
-        "footer": "※ Cần điều chỉnh số liệu cho phù hợp với từng bệnh viện."
-    },
-    "km": {
-        "lang_label": "ជ្រើសរើសភាសា",
-        "lang_display": "ភាសាខ្មែរ",
-        "country_label": "ប្រទេស",
-        "sidebar_basic": "ការកំណត់មូលដ្ឋាន",
-        "sidebar_hint": "សូមបញ្ចូលទិន្នន័យតាមស្ថានភាពពិតរបស់មន្ទីរពេទ្យជាមួយអតិថិជន។",
-        "title": "គណនាម៉ូដែលអាជីវកម្មម៉ាស៊ីនផលិតអុកស៊ីសែន",
-        "subtitle": "ការប្រៀបធៀបជួល និងទិញ (ROI) ប្រៀបធៀបនឹងប្រើស៊ីឡាំងតែប៉ុណ្ណោះ",
-        "hospital_name_label": "បញ្ចូលឈ្មោះមន្ទីរពេទ្យ",
-        "print_button": "បោះពុម្ពទំព័រនេះ (Ctrl+P)",
-        "save_button": "រក្សាទុកសេណារីយ៉ូជា CSV",
-        "save_note": "※ អ្នកអាចប្រមូល CSV ទាំងនេះដើម្បីគ្រប់គ្រង និងប្រៀបធៀបមន្ទីរពេទ្យ។",
-        "sec1": "1. ចំណាយប្រើប្រាស់ស៊ីឡាំងអុកស៊ីសែនបច្ចុប្បន្ន",
-        "sec2": "2. លក្ខខណ្ឌបើកបរ និងថ្លៃអគ្គិសនីរបស់ម៉ាស៊ីន",
-        "sec2_1": "2-1. បរិមាណអុកស៊ីសែនពីម៉ាស៊ីន ប្រៀបធៀបនឹងស៊ីឡាំង",
-        "sec3": "3. គំរូជួល",
-        "sec4": "4. គំរូទិញ (CAPEX + OPEX)",
-        "sec5": "5. សង្ខេបប្រៀបធៀបចំណាយ",
-        "sec_roi": "6. វិភាគ ROI (ជួល / ទិញ)",
-        "cyl_mode_radio": "របៀបបញ្ចូលថ្លៃស៊ីឡាំង",
-        "cyl_mode_direct": "បញ្ចូលថ្លៃសរុបក្នុងមួយខែដោយផ្ទាល់",
-        "cyl_mode_calc": "គណនា៖ ចំនួនស៊ីឡាំង × តម្លៃ",
-        "days_per_month": "ចំនួនថ្ងៃក្នុងមួយខែ",
-        "cyl_monthly_direct": "ថ្លៃប្រើស៊ីឡាំងក្នុងមួយខែ (USD)",
-        "cyl_daily_qty": "ចំនួនស៊ីឡាំងប្រើក្នុងមួយថ្ងៃ (ប៊ូទុុង/ថ្ងៃ)",
-        "cyl_cost_per_unit": "ថ្លៃស៊ីឡាំងមួយ (រួមទាំងបញ្ចូលឧស្ម័ន និងដឹកជញ្ជូន, USD)",
-        "usage_percent": "ជាក់ស្តែងប្រើបានប្រហែលប៉ុន្មាន % នៃស៊ីឡាំង (40L, 150BAR) មុនពេលប្ដូរ?",
-        "usage_info_prefix": "ចំណាយក្នុងមួយខែ ប្រសិនបើប្រើ 100%",
-        "usage_info_mid": "→ ជាមួយតម្លៃភាគរយនេះ ចំណាយពិតក្នុងមួយខែគឺ",
-        "usage_info_suffix": "",
-        "energy_info": "📌 ចំណាយអគ្គិសនីបើកម៉ាស៊ីនក្នុងមួយខែ ≈",
-        "gen_flow": "លំហូរអុកស៊ីសែនពីម៉ាស៊ីន (LPM)",
-        "cyl_volume": "មាឌស៊ីឡាំង (L)",
-        "cyl_pressure": "សម្ពាធបំពេញស៊ីឡាំង (BAR)",
-        "gen_vs_cyl_line": "👉 ម៉ាស៊ីន 1 គ្រឿង ≈ {day_cyl:.1f} ស៊ីឡាំង/ថ្ងៃ ប្រហាក់ប្រហែល {mon_cyl:.0f} ស៊ីឡាំង/ខែ",
-        "rental_monthly_fee": "ថ្លៃជួលក្នុងមួយខែ (USD)",
-        "rental_includes_maint": "រួមបញ្ចូលថ្លៃថែទាំក្នុងថ្លៃជួលរួចហើយ",
-        "rental_extra_maint": "ថ្លៃថែទាំបន្ថែមក្នុងមួយខែ (USD)",
-        "purchase_price": "តម្លៃទិញម៉ាស៊ីន (USD)",
-        "maintenance_annual": "ថ្លៃថែទាំប្រចាំឆ្នាំ (USD)",
-        "amort_years": "រយៈពេលសងทุน/ចំណាយ (ឆ្នាំ)",
-        "colA_title": "ប្រើតែស៊ីឡាំង",
-        "colB_title": "គំរូជួល",
-        "colC_title": "គំរូទិញ",
-        "metric_month": "ចំណាយក្នុងមួយខែ (USD)",
-        "metric_year": "ចំណាយក្នុងមួយឆ្នាំ (USD)",
-        "metric_5year": "ចំណាយរយៈពេល 5 ឆ្នាំ (USD)",
-        "roi_saving_success": "✔ ទិញម៉ាស៊ីនអាចសន្សំបានប្រហែល {saving:,.0f} USD ក្នុងមួយឆ្នាំ ប្រៀបធៀបនឹងប្រើស៊ីឡាំងប៉ុណ្ណោះ។",
-        "roi_saving_warning": "❗ ជាមួយទិន្នន័យបច្ចុប្បន្ន គំរូទិញមិនសន្សំចំណាយជាងប្រើស៊ីឡាំងទេ។",
-        "roi_payback_info": "▶ រយៈពេលសងទុនប្រហែល {years:.1f} ឆ្នាំ",
-        "roi_payback_impossible": "មិនអាចសងទុនឬអាចនឹងខាតបង់ទុនជាមួយទិន្នន័យបច្ចុប្បន្ន។",
-        "footer": "※ សូមកែប្រែទិន្នន័យឲ្យសមរម្យតាមស្ថានភាពពិតនៃមន្ទីរពេទ្យ។"
+        "metric_5year": "5-year total cost (USD)",
+        "sec_roi": "6. ROI analysis and 1–5 year cost trend",
+        "footer": "Adjust inputs to match the actual hospital situation.",
+        "print_button": "Print this view (use browser print)",
+        "save_button": "Download current hospital scenario as CSV",
+        "save_note": "You can collect CSV files and compare hospitals.",
     }
+    # 필요하면 vi, km 도 같은 구조로 나중에 추가 가능
 }
 
 # =================
-# 🔶 Streamlit UI
+# Streamlit 기본 설정
 # =================
 
 st.set_page_config(
@@ -230,43 +109,41 @@ st.set_page_config(
     layout="wide"
 )
 
-# ---- Sidebar: language & country ----
+# ---- 사이드바: 언어, 국가 ----
 st.sidebar.header("Settings")
 
 language = st.sidebar.selectbox(
-    "Language / 언어 / Ngôn ngữ / ភាសា",
-    ["ko", "en", "vi", "km"],
+    "Language / 언어",
+    ["ko", "en"],
     index=0,
     format_func=lambda x: lang_pack[x]["lang_display"]
 )
 L = lang_pack[language]
 
-st.sidebar.subheader(L["sidebar_basic"])
 country = st.sidebar.selectbox(
     L["country_label"],
     ["Cambodia", "Vietnam", "Other"]
 )
-st.sidebar.markdown("---")
+
+st.sidebar.subheader(L["sidebar_basic"])
 st.sidebar.write(L["sidebar_hint"])
 
-# ---- Tabs ----
-tab_hospital, tab_dealer = st.tabs(["🏥 Hospital / 병원", "🤝 Dealer / 리테일러"])
+# ---- 탭 구성 ----
+tab_hospital, tab_dealer = st.tabs(["병원용 ROI", "리테일러 ROI"])
 
 # ================================
-# 🏥 병원용 ROI 계산기 (기존 기능)
+# 병원용 ROI 계산기
 # ================================
 with tab_hospital:
-    # ---- Title ----
     st.title(L["title"])
     st.caption(L["subtitle"])
 
-    # ---- Hospital name ----
     hospital_name = st.text_input(L["hospital_name_label"], "")
 
     st.markdown("---")
 
     # -----------------------------
-    # 1. 현재 실린더 사용 비용 입력
+    # 1. 현재 실린더 사용 비용
     # -----------------------------
     st.header(L["sec1"])
 
@@ -314,9 +191,16 @@ with tab_hospital:
                 step=1.0
             )
         with c3:
-            st.write("")
+            delivery_cost_per_unit = st.number_input(
+                L["cyl_delivery_per_unit"],
+                min_value=0.0,
+                value=0.0,
+                step=1.0
+            )
 
-        monthly_cylinder_cost_base = daily_cylinder_qty * cylinder_cost_per_unit * days_per_month
+        monthly_cylinder_cost_base = (
+            daily_cylinder_qty * (cylinder_cost_per_unit + delivery_cost_per_unit) * days_per_month
+        )
 
     usage_percent = st.selectbox(
         L["usage_percent"],
@@ -324,18 +208,20 @@ with tab_hospital:
         index=0
     )
 
-    monthly_cylinder_cost = monthly_cylinder_cost_base * (100 / usage_percent)
+    # 실질 비용 (교체 퍼센트 반영)
+    monthly_cylinder_cost = monthly_cylinder_cost_base * (100.0 / usage_percent)
 
-    st.info(
-        f"{L['usage_info_prefix']}: {round(monthly_cylinder_cost_base) USD, "
-        f"{usage_percent}% 사용 시 실질 비용: {round(monthly_cylinder_cost) USD** {L['usage_info_suffix']}"
+    info_text = (
+        f"{L['usage_info_prefix']}: {round(monthly_cylinder_cost_base)} USD, "
+        f"{usage_percent}% 사용 시 실질 월 비용은 {round(monthly_cylinder_cost)} USD 입니다."
     )
-(info_text)
+    st.info(info_text)
+
     annual_cylinder_cost = monthly_cylinder_cost * 12
     five_year_cylinder_cost = annual_cylinder_cost * 5
 
     # -----------------------------
-    # 2. 산소발생기 공통 운전 조건 (전기/운전시간)
+    # 2. 산소발생기 운전 조건 및 전기요금
     # -----------------------------
     st.header(L["sec2"])
 
@@ -348,7 +234,6 @@ with tab_hospital:
             value=7.5,
             step=0.5
         )
-
     with col2:
         operating_hours_per_day = st.number_input(
             "하루 운전 시간 (시간) / Operating hours per day",
@@ -357,7 +242,6 @@ with tab_hospital:
             value=24.0,
             step=1.0
         )
-
     with col3:
         elec_tariff = st.number_input(
             "전기요금 단가 (USD/kWh) / Electricity tariff",
@@ -370,8 +254,8 @@ with tab_hospital:
     annual_energy_cost = monthly_energy_cost * 12
 
     st.write(
-        f"{L['energy_info']} **{monthly_energy_cost:,.0f} USD** "
-        f"(≈ {annual_energy_cost:,.0f} USD / year)"
+        f"산소발생기 전기요금 기준 월 운영비는 약 {round(monthly_energy_cost)} USD, "
+        f"연간 약 {round(annual_energy_cost)} USD 입니다."
     )
 
     # -----------------------------
@@ -383,39 +267,34 @@ with tab_hospital:
 
     with col1:
         generator_flow_lpm = st.number_input(
-            f"{L['gen_flow']} (기본값 60LPM)",
+            f"{L['gen_flow']} (기본값 60)",
             min_value=1.0,
             value=60.0,
             step=5.0
         )
-
     with col2:
         cylinder_volume_l = st.number_input(
-            f"{L['cyl_volume']} (기본값 40L)",
+            f"{L['cyl_volume']} (기본값 40)",
             min_value=1.0,
             value=40.0,
             step=1.0
         )
-
     with col3:
         cylinder_pressure_bar = st.number_input(
-            f"{L['cyl_pressure']} (기본값 150BAR)",
+            f"{L['cyl_pressure']} (기본값 150)",
             min_value=1.0,
             value=150.0,
             step=10.0
         )
 
-    daily_oxygen_m3 = generator_flow_lpm * 60 * operating_hours_per_day / 1000
-    cylinder_oxygen_m3 = cylinder_volume_l * cylinder_pressure_bar / 1000
-
-    cylinders_per_day_equiv = daily_oxygen_m3 / cylinder_oxygen_m3 if cylinder_oxygen_m3 > 0 else 0
+    daily_oxygen_m3 = generator_flow_lpm * 60.0 * operating_hours_per_day / 1000.0
+    cylinder_oxygen_m3 = cylinder_volume_l * cylinder_pressure_bar / 1000.0
+    cylinders_per_day_equiv = daily_oxygen_m3 / cylinder_oxygen_m3 if cylinder_oxygen_m3 > 0 else 0.0
     cylinders_per_month_equiv = cylinders_per_day_equiv * days_per_month
 
     st.success(
-        L["gen_vs_cyl_line"].format(
-            day_cyl=cylinders_per_day_equiv,
-            mon_cyl=cylinders_per_month_equiv
-        )
+        f"산소발생기 1대는 하루 약 {cylinders_per_day_equiv:.1f}병, "
+        f"한 달 약 {cylinders_per_month_equiv:.0f}병의 실린더 공급량과 비슷합니다."
     )
 
     # -----------------------------
@@ -427,17 +306,16 @@ with tab_hospital:
 
     with col1:
         rental_monthly_fee = st.number_input(
-            f"{L['rental_monthly_fee']}",
+            L["rental_monthly_fee"],
             min_value=0.0,
             value=2500.0,
             step=100.0
         )
-
     with col2:
         rental_includes_maintenance = st.checkbox(
-            L["rental_includes_maint"], value=True
+            L["rental_includes_maint"],
+            value=True
         )
-
     with col3:
         rental_extra_maintenance = st.number_input(
             L["rental_extra_maint"],
@@ -456,7 +334,7 @@ with tab_hospital:
     rental_five_year_total = rental_annual_total * 5
 
     # -----------------------------
-    # 4. 구매 모델
+    # 4. 구매 모델 (CAPEX + OPEX)
     # -----------------------------
     st.header(L["sec4"])
 
@@ -469,7 +347,6 @@ with tab_hospital:
             value=18000.0,
             step=1000.0
         )
-
     with col2:
         maintenance_annual = st.number_input(
             L["maintenance_annual"],
@@ -477,7 +354,6 @@ with tab_hospital:
             value=1500.0,
             step=100.0
         )
-
     with col3:
         amortization_years = st.number_input(
             L["amort_years"],
@@ -487,27 +363,31 @@ with tab_hospital:
             step=1
         )
 
-    monthly_capex = purchase_price / (amortization_years * 12)
-    monthly_maintenance = maintenance_annual / 12
+    monthly_capex = purchase_price / (amortization_years * 12.0)
+    monthly_maintenance = maintenance_annual / 12.0
 
-    purchase_monthly_total = monthly_capex + monthly_maintenance + monthly_energy_cost
-    purchase_annual_total = purchase_monthly_total * 12
-    purchase_five_year_total = purchase_annual_total * 5
+    purchase_monthly_opex = monthly_maintenance + monthly_energy_cost
+    purchase_annual_opex = purchase_monthly_opex * 12.0
 
-    # 연간/5년 절감, Payback 계산
-    purchase_annual_saving = annual_cylinder_cost - purchase_annual_total
-    annual_saving_vs_cylinder = purchase_annual_saving  # CSV 저장용 이름 유지
-    if purchase_annual_saving > 0:
-        payback_years = purchase_price / purchase_annual_saving
-    else:
-        payback_years = None
+    # 회계 관점에서 보여줄 월/연 비용 (CAPEX 분할 + OPEX)
+    purchase_monthly_display = monthly_capex + purchase_monthly_opex
+    purchase_annual_display = purchase_monthly_display * 12.0
 
-    rental_annual_saving = annual_cylinder_cost - rental_annual_total
+    # 실제 5년 총 비용 = 초기 CAPEX + 5년 OPEX
+    purchase_five_year_total = purchase_price + purchase_annual_opex * 5.0
+
+    # ROI 계산: 실린더 vs "운영비(OPEX)" 기준
+    annual_saving_purchase = annual_cylinder_cost - purchase_annual_opex
+    payback_years = None
+    if annual_saving_purchase > 0:
+        payback_years = purchase_price / annual_saving_purchase
+
+    annual_saving_rental = annual_cylinder_cost - rental_annual_total
     rental_5yr_saving = five_year_cylinder_cost - rental_five_year_total
     purchase_5yr_saving = five_year_cylinder_cost - purchase_five_year_total
 
     # -----------------------------
-    # 5. 결과 비교
+    # 5. 결과 요약 및 비교
     # -----------------------------
     st.header(L["sec5"])
 
@@ -515,94 +395,87 @@ with tab_hospital:
 
     with colA:
         st.subheader(L["colA_title"])
-        st.metric(L["metric_month"], f"{monthly_cylinder_cost:,.0f}")
-        st.metric(L["metric_year"], f"{annual_cylinder_cost:,.0f}")
-        st.metric(L["metric_5year"], f"{five_year_cylinder_cost:,.0f}")
+        st.metric(L["metric_month"], f"{round(monthly_cylinder_cost):,}")
+        st.metric(L["metric_year"], f"{round(annual_cylinder_cost):,}")
+        st.metric(L["metric_5year"], f"{round(five_year_cylinder_cost):,}")
 
     with colB:
         st.subheader(L["colB_title"])
-        st.metric(L["metric_month"], f"{rental_monthly_total:,.0f}")
-        st.metric(L["metric_year"], f"{rental_annual_total:,.0f}")
-        st.metric(L["metric_5year"], f"{rental_five_year_total:,.0f}")
+        st.metric(L["metric_month"], f"{round(rental_monthly_total):,}")
+        st.metric(L["metric_year"], f"{round(rental_annual_total):,}")
+        st.metric(L["metric_5year"], f"{round(rental_five_year_total):,}")
 
     with colC:
         st.subheader(L["colC_title"])
-        st.metric(L["metric_month"], f"{purchase_monthly_total:,.0f}")
-        st.metric(L["metric_year"], f"{purchase_annual_total:,.0f}")
-        st.metric(L["metric_5year"], f"{purchase_five_year_total:,.0f}")
+        st.metric(L["metric_month"], f"{round(purchase_monthly_display):,}")
+        st.metric(L["metric_year"], f"{round(purchase_annual_display):,}")
+        st.metric(L["metric_5year"], f"{round(purchase_five_year_total):,}")
 
     st.markdown("---")
 
     # -----------------------------
-    # 6. ROI 설명 + 1~5년 비용 그래프
+    # 6. ROI 분석 및 그래프
     # -----------------------------
     st.header(L["sec_roi"])
 
     col1, col2 = st.columns(2)
 
-    # 렌탈 ROI
     with col1:
-        st.subheader("렌탈 ROI / Rental ROI")
-        st.write(f"- 연간 절감액 / Annual saving vs Cylinder: **{rental_annual_saving:,.0f} USD**")
-        st.write(f"- 5년 누적 절감 / 5-year saving vs Cylinder: **{rental_5yr_saving:,.0f} USD**")
-        if rental_annual_saving > 0:
-            st.success("✔ 렌탈이 실린더 유지보다 연간 기준으로 비용 절감 효과가 있습니다.")
+        st.subheader("렌탈 ROI")
+        st.write(f"실린더 대비 연간 절감액: {round(annual_saving_rental):,} USD")
+        st.write(f"5년 누적 절감액: {round(rental_5yr_saving):,} USD")
+        if annual_saving_rental > 0:
+            st.success("렌탈이 실린더 유지보다 비용 절감 효과가 있습니다.")
         else:
-            st.warning("❗ 렌탈이 실린더 유지보다 비싸거나 비슷한 수준입니다.")
+            st.warning("렌탈이 실린더 유지보다 비싸거나 비슷한 수준입니다.")
 
-    # 구매 ROI
     with col2:
-        st.subheader("구매 ROI / Purchase ROI")
-        st.write(f"- 연간 절감액 / Annual saving vs Cylinder: **{purchase_annual_saving:,.0f} USD**")
-        st.write(f"- 5년 누적 절감 / 5-year saving vs Cylinder: **{purchase_5yr_saving:,.0f} USD**")
-        if purchase_annual_saving > 0:
-            st.success(L["roi_saving_success"].format(saving=purchase_annual_saving))
-            if payback_years:
-                st.info(L["roi_payback_info"].format(years=payback_years))
+        st.subheader("구매 ROI")
+        st.write(f"실린더 대비 연간 운영비 절감액: {round(annual_saving_purchase):,} USD")
+        st.write(f"5년 누적 절감액: {round(purchase_5yr_saving):,} USD")
+        if annual_saving_purchase > 0 and payback_years is not None:
+            st.success(
+                f"초기 투자 {round(purchase_price):,} USD 기준 예상 투자 회수 기간은 "
+                f"약 {payback_years:.1f}년입니다."
+            )
         else:
-            st.warning(L["roi_saving_warning"])
-            st.info(L["roi_payback_impossible"])
+            st.warning("현재 입력값 기준으로 구매 모델의 투자 회수 계산이 어렵습니다.")
 
-    # 1~5년 비용 추이 그래프
     years = [1, 2, 3, 4, 5]
     cyl_costs = [annual_cylinder_cost * y for y in years]
     rental_costs = [rental_annual_total * y for y in years]
-    purchase_costs = [purchase_annual_total * y for y in years]
+    purchase_costs = [purchase_price + purchase_annual_opex * y for y in years]
 
-    df_years = pd.DataFrame({
-        "Year": years,
-        "Cylinder": cyl_costs,
-        "Rental": rental_costs,
-        "Purchase": purchase_costs,
-    }).set_index("Year")
+    df_years = pd.DataFrame(
+        {
+            "Year": years,
+            "Cylinder": cyl_costs,
+            "Rental": rental_costs,
+            "Purchase": purchase_costs,
+        }
+    ).set_index("Year")
 
-    st.subheader("1~5년 비용 추이 / Cost over 1–5 years")
+    st.subheader("1~5년 누적 비용 추이")
     st.line_chart(df_years)
 
     st.caption(L["footer"])
 
     st.markdown("---")
 
-    # -----------------------------
-    # 🔶 인쇄 버튼
-    # -----------------------------
+    # 인쇄 버튼 (브라우저 인쇄 기능 호출)
     if st.button(L["print_button"]):
         st.markdown(
-            """
-            <script>
-            window.print();
-            </script>
-            """,
+            "<script>window.print();</script>",
             unsafe_allow_html=True,
         )
 
     # -----------------------------
-    # 🔶 병원별 시나리오 저장 (CSV 다운로드)
+    # 시나리오 CSV 저장
     # -----------------------------
     st.subheader(L["save_button"])
 
     summary = {
-        "hospital_name": hospital_name if hospital_name else "",
+        "hospital_name": hospital_name,
         "country": country,
         "days_per_month": days_per_month,
         "monthly_cylinder_cost": round(monthly_cylinder_cost, 2),
@@ -611,14 +484,14 @@ with tab_hospital:
         "rental_monthly_total": round(rental_monthly_total, 2),
         "rental_annual_total": round(rental_annual_total, 2),
         "rental_five_year_total": round(rental_five_year_total, 2),
-        "purchase_monthly_total": round(purchase_monthly_total, 2),
-        "purchase_annual_total": round(purchase_annual_total, 2),
+        "purchase_monthly_display": round(purchase_monthly_display, 2),
+        "purchase_annual_display": round(purchase_annual_display, 2),
         "purchase_five_year_total": round(purchase_five_year_total, 2),
-        "rental_annual_saving_vs_cylinder": round(rental_annual_saving, 2),
+        "annual_saving_rental_vs_cylinder": round(annual_saving_rental, 2),
+        "annual_saving_purchase_vs_cylinder": round(annual_saving_purchase, 2),
         "rental_5year_saving_vs_cylinder": round(rental_5yr_saving, 2),
-        "purchase_annual_saving_vs_cylinder": round(purchase_annual_saving, 2),
         "purchase_5year_saving_vs_cylinder": round(purchase_5yr_saving, 2),
-        "payback_years": round(payback_years, 2) if payback_years else "",
+        "payback_years_purchase": round(payback_years, 2) if payback_years else "",
         "generator_flow_lpm": generator_flow_lpm,
         "daily_cylinders_equiv": round(cylinders_per_day_equiv, 2),
         "monthly_cylinders_equiv": round(cylinders_per_month_equiv, 2),
@@ -641,16 +514,14 @@ with tab_hospital:
 
 
 # ====================================
-# 🤝 리테일러 / 파트너용 수익 모델 탭
+# 리테일러 / 파트너용 ROI 계산기
 # ====================================
 with tab_dealer:
     st.title("리테일러 / 파트너 수익 모델 (Dealer ROI)")
 
     st.markdown(
-        """
-        병원에 장비를 공급하는 **리테일러(딜러)** 입장에서  
-        ▶ 단순 판매 vs 렌탈 모델의 수익성과 회수기간을 계산합니다.
-        """
+        "병원에 장비를 공급하는 리테일러(딜러) 입장에서 "
+        "단순 판매 vs 렌탈 모델의 수익성과 회수기간을 비교합니다."
     )
 
     st.markdown("---")
@@ -659,25 +530,25 @@ with tab_dealer:
 
     with col1:
         factory_price = st.number_input(
-            "제조사 공급가 / Factory price (USD)",
+            "제조사 공급가 (USD)",
             min_value=0.0,
             value=12000.0,
             step=500.0,
         )
         import_cost = st.number_input(
-            "수입·통관비용 / Import & customs cost (USD)",
+            "수입·통관비용 (USD)",
             min_value=0.0,
             value=1000.0,
             step=100.0,
         )
         dealer_sale_price = st.number_input(
-            "병원 판매가 / Sale price to hospital (USD)",
+            "병원 판매가 (USD)",
             min_value=0.0,
             value=18000.0,
             step=500.0,
         )
         dealer_install_cost = st.number_input(
-            "설치·교육 등 초기 비용 / Installation & training cost (USD, one-time)",
+            "설치·교육 등 초기 비용 (USD, 일회성)",
             min_value=0.0,
             value=500.0,
             step=100.0,
@@ -685,19 +556,19 @@ with tab_dealer:
 
     with col2:
         dealer_annual_service_cost = st.number_input(
-            "연간 서비스·유지보수비용 (판매모델용, USD/년)\n※ 1년차는 무상 워런티, 2년차부터 적용",
+            "연간 서비스·유지보수비용 (판매모델용, USD/년)\n1년차는 무상 워런티, 2년차부터 발생",
             min_value=0.0,
             value=800.0,
             step=100.0,
         )
         dealer_rental_fee = st.number_input(
-            "병원 월 렌탈료 / Monthly rental fee to hospital (USD)",
+            "병원 월 렌탈료 (USD)",
             min_value=0.0,
             value=2500.0,
             step=100.0,
         )
         rental_contract_years = st.number_input(
-            "렌탈 계약기간 (년) / Rental contract period (years)",
+            "렌탈 계약기간 (년)",
             min_value=1,
             max_value=10,
             value=5,
@@ -706,68 +577,67 @@ with tab_dealer:
 
     st.markdown("---")
 
-    # 공통: 한 대 기준 총 원가 (판매/렌탈 모두 동일)
+    # 공통: 한 대 기준 초기 총 원가
     initial_unit_cost = factory_price + import_cost + dealer_install_cost
 
     # ① 단순 판매 모델
-    st.subheader("① 단순 판매 모델 (One-off Sale)")
+    st.subheader("1) 단순 판매 모델")
 
-    sale_initial_margin = dealer_sale_price - initial_unit_cost  # 판매 시점 마진
-    sale_margin_rate = (sale_initial_margin / dealer_sale_price * 100) if dealer_sale_price > 0 else 0.0
+    sale_initial_margin = dealer_sale_price - initial_unit_cost
+    sale_margin_rate = (sale_initial_margin / dealer_sale_price * 100.0) if dealer_sale_price > 0 else 0.0
 
     col_s1, col_s2, col_s3 = st.columns(3)
     with col_s1:
-        st.metric("초기 총 원가 / Total initial cost (USD)", f"{round(initial_unit_cost):,}")
+        st.metric("초기 총 원가 (USD)", f"{round(initial_unit_cost):,}")
     with col_s2:
-        st.metric("한 대당 초기 이익 / Margin per unit (USD)", f"{round(sale_initial_margin):,}")
+        st.metric("한 대당 초기 이익 (USD)", f"{round(sale_initial_margin):,}")
     with col_s3:
-        st.metric("마진율 / Margin rate (%)", f"{sale_margin_rate:.1f}%")
+        st.metric("마진율 (%)", f"{sale_margin_rate:.1f}")
 
     st.markdown(
-        f"- 공급가 + 통관 + 설치를 모두 포함한 한 대당 총 원가는 **{round(initial_unit_cost):,} USD** 입니다.\n"
-        f"- 병원에 {round(dealer_sale_price):,} USD에 판매하면 초기 이익은 약 **{round(sale_initial_margin):,} USD**, "
-        f"마진율은 약 **{sale_margin_rate:.1f}%** 입니다.\n"
-        f"- 1년차는 무상 워런티로 보고 서비스비가 없고, 2년차부터는 매년 "
-        f"**{round(dealer_annual_service_cost):,} USD** 의 유지보수비가 발생한다고 가정합니다."
+        f"- 공급가 + 통관 + 설치를 포함한 한 대당 총 원가는 약 {round(initial_unit_cost):,} USD 입니다.\n"
+        f"- 병원에 {round(dealer_sale_price):,} USD에 판매하면 초기 이익은 약 "
+        f"{round(sale_initial_margin):,} USD, 마진율은 약 {sale_margin_rate:.1f}% 입니다.\n"
+        f"- 1년차는 무상 워런티, 2년차부터 연간 {round(dealer_annual_service_cost):,} USD의 "
+        f"서비스/유지보수 비용이 발생한다고 가정합니다."
     )
 
     st.markdown("---")
 
     # ② 렌탈 모델
-    st.subheader("② 렌탈 모델 (Rental to Hospital)")
+    st.subheader("2) 렌탈 모델")
 
-    initial_invest_rental = initial_unit_cost  # 렌탈용 초기 투자금
-    annual_profit_rental = dealer_rental_fee * 12  # 렌탈료에 서비스비 포함 가정
+    initial_invest_rental = initial_unit_cost
+    annual_profit_rental = dealer_rental_fee * 12.0  # 서비스비 포함으로 가정
 
+    payback_years_dealer = None
     if annual_profit_rental > 0:
         payback_years_dealer = initial_invest_rental / annual_profit_rental
-    else:
-        payback_years_dealer = None
 
     total_profit_rental_contract = -initial_invest_rental + annual_profit_rental * rental_contract_years
 
     col_r1, col_r2, col_r3 = st.columns(3)
     with col_r1:
-        st.metric("초기 투자금 / Initial investment (USD)", f"{round(initial_invest_rental):,}")
+        st.metric("초기 투자금 (USD)", f"{round(initial_invest_rental):,}")
     with col_r2:
-        st.metric("연간 순이익 / Annual net profit (USD)", f"{round(annual_profit_rental):,}")
+        st.metric("연간 순이익 (USD)", f"{round(annual_profit_rental):,}")
     with col_r3:
         if payback_years_dealer:
-            st.metric("투자 회수기간 / Payback (years)", f"{payback_years_dealer:.1f}")
+            st.metric("투자 회수기간 (년)", f"{payback_years_dealer:.1f}")
         else:
-            st.metric("투자 회수기간 / Payback", "N/A")
+            st.metric("투자 회수기간 (년)", "N/A")
 
-    st.write(
-        f"- 렌탈 1대 기준, 초기 투자금은 **{round(initial_invest_rental):,} USD** 입니다.\n"
-        f"- 월 렌탈료 기준 연간 순이익(서비스 포함)은 **{round(annual_profit_rental):,} USD** 로 계산됩니다.\n"
-        f"- 계약 {rental_contract_years}년 기준, 렌탈 1대 누적 순이익(초기 투자 포함)은 "
-        f"**{round(total_profit_rental_contract):,} USD** 입니다."
+    st.markdown(
+        f"- 렌탈 1대 기준 초기 투자금은 {round(initial_invest_rental):,} USD 입니다.\n"
+        f"- 월 렌탈료 기준 연간 순이익은 약 {round(annual_profit_rental):,} USD 입니다.\n"
+        f"- 계약 {rental_contract_years}년 기준 예상 누적 순이익은 "
+        f"{round(total_profit_rental_contract):,} USD 입니다."
     )
 
     st.markdown("---")
 
-    # 📈 누적 현금흐름 그래프 (판매 vs 렌탈)
-    st.subheader("📈 누적 현금흐름 (Cumulative Cash Flow) – 판매 vs 렌탈")
+    # 누적 현금흐름 그래프 (판매 vs 렌탈)
+    st.subheader("누적 현금흐름 (판매 vs 렌탈)")
 
     years_cf = list(range(0, rental_contract_years + 1))
     cash_rental = []
@@ -775,58 +645,43 @@ with tab_dealer:
 
     for y in years_cf:
         if y == 0:
-            # 연 0 : 렌탈은 투자만, 판매는 바로 판매까지 끝났다고 가정
             cash_rental.append(-initial_invest_rental)
             cash_sale.append(sale_initial_margin)
         else:
-            # 렌탈: 초기 투자 후 매년 순이익 누적
             rental_cf = -initial_invest_rental + annual_profit_rental * y
-
-            # 판매: 초기 마진에서, 2년차부터 매년 서비스비 차감
-            service_years = max(0, y - 1)  # 1년차는 0, 2년차부터 1, 3년차 2 ...
+            service_years = max(0, y - 1)  # 1년차 0, 2년차부터 서비스비 발생
             sale_cf = sale_initial_margin - dealer_annual_service_cost * service_years
-
             cash_rental.append(rental_cf)
             cash_sale.append(sale_cf)
 
     df_cash = pd.DataFrame(
-        {
-            "Year": years_cf,
-            "Rental": cash_rental,
-            "Sale": cash_sale,
-        }
+        {"Year": years_cf, "Rental": cash_rental, "Sale": cash_sale}
     ).set_index("Year")
 
     st.line_chart(df_cash)
 
-    # 📊 연도별 누적 순이익 – 판매 vs 렌탈
-    st.subheader("📊 연도별 누적 순이익 (Total Profit by Year) – 판매 vs 렌탈")
+    # 연도별 누적 순이익 (판매 vs 렌탈)
+    st.subheader("연도별 누적 순이익 (판매 vs 렌탈)")
 
     years_profit = list(range(1, rental_contract_years + 1))
     sale_profits = []
     rental_profits = []
 
     for y in years_profit:
-        # 렌탈: 초기 투자 포함 누적 이익
         rental_total = -initial_invest_rental + annual_profit_rental * y
         rental_profits.append(rental_total)
 
-        # 판매: 초기 마진 – (2년차부터 서비스비)
         service_years = max(0, y - 1)
         sale_total = sale_initial_margin - dealer_annual_service_cost * service_years
         sale_profits.append(sale_total)
 
     df_profit = pd.DataFrame(
-        {
-            "Year": years_profit,
-            "Sale": sale_profits,
-            "Rental": rental_profits,
-        }
+        {"Year": years_profit, "Sale": sale_profits, "Rental": rental_profits}
     ).set_index("Year")
 
     st.bar_chart(df_profit)
 
     st.caption(
-        "※ 이 탭은 리테일러(딜러) 입장에서 **단순 판매 vs 렌탈**의 장기 수익성을 비교합니다.\n"
-        "   병원 ROI는 왼쪽 탭에서 확인하세요."
+        "이 탭은 리테일러(딜러) 입장에서 단순 판매와 렌탈의 장기 수익성을 비교하기 위한 도구입니다. "
+        "병원 관점의 ROI는 병원용 ROI 탭에서 확인하세요."
     )
