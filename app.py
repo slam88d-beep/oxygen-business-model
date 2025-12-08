@@ -682,13 +682,12 @@ with tab_dealer:
 
     st.markdown("---")
 
-    # ② 렌탈 모델
+       # ② 렌탈 모델
     st.subheader(t_sec_rental)
 
-initial_invest_rental = initial_unit_cost
-# 렌탈 연간 순이익 = 연간 렌탈료 - 연간 서비스 제공 원가
-annual_profit_rental = dealer_rental_fee * 12.0 - service_cost_year
-
+    initial_invest_rental = initial_unit_cost
+    # 렌탈 연간 순이익 = 연간 렌탈료 - 연간 서비스 제공 원가
+    annual_profit_rental = dealer_rental_fee * 12.0 - service_cost_year
 
     payback_years_dealer = None
     if annual_profit_rental > 0:
@@ -765,3 +764,4 @@ annual_profit_rental = dealer_rental_fee * 12.0 - service_cost_year
     st.bar_chart(df_profit)
 
     st.caption(t_footer)
+
