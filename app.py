@@ -517,34 +517,105 @@ with tab_hospital:
 # 리테일러 / 파트너용 ROI 계산기
 # ====================================
 with tab_dealer:
-    st.title(L["dealer_tab_title"])
+    # 언어별 텍스트 정의
+    if language == "ko":
+        t_title = "리테일러 / 파트너 수익 모델 (Dealer ROI)"
+        t_intro = (
+            "병원에 장비를 공급하는 리테일러(딜러) 입장에서 "
+            "단순 판매 vs 렌탈 모델의 수익성과 회수기간을 비교합니다."
+        )
+        t_factory_price = "제조사 공급가 (USD)"
+        t_import_cost = "수입·통관비용 (USD)"
+        t_sale_price = "병원 판매가 (USD)"
+        t_install_cost = "설치·교육 등 초기 비용 (USD, 일회성)"
+        t_annual_service = (
+            "연간 서비스·유지보수비용 (판매모델용, USD/년)\n"
+            "※ 1년차는 무상 워런티, 2년차부터 발생"
+        )
+        t_rental_fee = "병원 월 렌탈료 (USD)"
+        t_contract_years = "렌탈 계약기간 (년)"
+        t_sec_sale = "1) 단순 판매 모델"
+        t_sec_rental = "2) 렌탈 모델"
+        t_metric_initial_cost = "초기 총 원가 (USD)"
+        t_metric_margin = "한 대당 초기 이익 (USD)"
+        t_metric_margin_rate = "마진율 (%)"
+        t_sale_text_1 = "공급가 + 통관 + 설치를 포함한 한 대당 총 원가입니다."
+        t_sale_text_2 = "병원 판매 시 초기 이익과 마진율입니다."
+        t_sale_text_3 = "1년차는 무상 워런티, 2년차부터 서비스/유지보수 비용이 발생한다고 가정합니다."
+        t_metric_initial_invest = "초기 투자금 (USD)"
+        t_metric_annual_profit = "연간 순이익 (USD)"
+        t_metric_payback = "투자 회수기간 (년)"
+        t_rental_text_1 = "렌탈 1대 기준 초기 투자금과 연간 순이익을 기준으로 수익을 계산합니다."
+        t_rental_text_2 = "계약 기간 전체에 대한 누적 순이익입니다."
+        t_cashflow_title = "누적 현금흐름 (판매 vs 렌탈)"
+        t_profit_title = "연도별 누적 순이익 (판매 vs 렌탈)"
+        t_footer = (
+            "이 탭은 리테일러(딜러) 입장에서 단순 판매와 렌탈의 장기 수익성을 "
+            "비교하기 위한 도구입니다. 병원 관점의 ROI는 병원용 ROI 탭에서 확인하세요."
+        )
+    else:
+        t_title = "Dealer / Partner Profit Model (Dealer ROI)"
+        t_intro = (
+            "From the dealer's perspective, compare the profitability and payback period "
+            "of one-off sale vs rental to hospitals."
+        )
+        t_factory_price = "Factory price (USD)"
+        t_import_cost = "Import & customs cost (USD)"
+        t_sale_price = "Sales price to hospital (USD)"
+        t_install_cost = "Installation & training cost (USD, one-time)"
+        t_annual_service = (
+            "Annual service / maintenance cost (sales model, USD/year)\n"
+            "※ Year 1 is free warranty, cost applies from year 2."
+        )
+        t_rental_fee = "Monthly rental fee to hospital (USD)"
+        t_contract_years = "Rental contract period (years)"
+        t_sec_sale = "1) One-off sales model"
+        t_sec_rental = "2) Rental model"
+        t_metric_initial_cost = "Initial total cost (USD)"
+        t_metric_margin = "Margin per unit (USD)"
+        t_metric_margin_rate = "Margin rate (%)"
+        t_sale_text_1 = "Total cost per unit including factory price, import and installation."
+        t_sale_text_2 = "Initial margin and margin rate when selling to a hospital."
+        t_sale_text_3 = "Year 1 is free warranty; annual service cost is charged from year 2."
+        t_metric_initial_invest = "Initial investment (USD)"
+        t_metric_annual_profit = "Annual net profit (USD)"
+        t_metric_payback = "Payback period (years)"
+        t_rental_text_1 = "Rental profit is calculated from initial investment and annual net profit."
+        t_rental_text_2 = "This is the cumulative net profit over the full contract period."
+        t_cashflow_title = "Cumulative cash flow (Sale vs Rental)"
+        t_profit_title = "Cumulative profit by year (Sale vs Rental)"
+        t_footer = (
+            "This tab is for comparing long-term profitability of sale vs rental "
+            "from the dealer's point of view. Hospital-side ROI is in the first tab."
+        )
 
-    st.markdown(L["dealer_intro"])
+    st.title(t_title)
+    st.markdown(t_intro)
     st.markdown("---")
 
     col1, col2 = st.columns(2)
 
     with col1:
         factory_price = st.number_input(
-            L["dealer_factory_price"],
+            t_factory_price,
             min_value=0.0,
             value=12000.0,
             step=500.0,
         )
         import_cost = st.number_input(
-            L["dealer_import_cost"],
+            t_import_cost,
             min_value=0.0,
             value=1000.0,
             step=100.0,
         )
         dealer_sale_price = st.number_input(
-            L["dealer_sale_price"],
+            t_sale_price,
             min_value=0.0,
             value=18000.0,
             step=500.0,
         )
         dealer_install_cost = st.number_input(
-            L["dealer_install_cost"],
+            t_install_cost,
             min_value=0.0,
             value=500.0,
             step=100.0,
@@ -552,19 +623,19 @@ with tab_dealer:
 
     with col2:
         dealer_annual_service_cost = st.number_input(
-            L["dealer_annual_service_cost"],
+            t_annual_service,
             min_value=0.0,
             value=800.0,
             step=100.0,
         )
         dealer_rental_fee = st.number_input(
-            L["dealer_rental_fee"],
+            t_rental_fee,
             min_value=0.0,
             value=2500.0,
             step=100.0,
         )
         rental_contract_years = st.number_input(
-            L["dealer_contract_years"],
+            t_contract_years,
             min_value=1,
             max_value=10,
             value=5,
@@ -577,29 +648,29 @@ with tab_dealer:
     initial_unit_cost = factory_price + import_cost + dealer_install_cost
 
     # ① 단순 판매 모델
-    st.subheader(L["dealer_sec_sale"])
+    st.subheader(t_sec_sale)
 
     sale_initial_margin = dealer_sale_price - initial_unit_cost
     sale_margin_rate = (sale_initial_margin / dealer_sale_price * 100.0) if dealer_sale_price > 0 else 0.0
 
     col_s1, col_s2, col_s3 = st.columns(3)
     with col_s1:
-        st.metric(L["dealer_metric_initial_cost"], f"{round(initial_unit_cost):,}")
+        st.metric(t_metric_initial_cost, f"{round(initial_unit_cost):,}")
     with col_s2:
-        st.metric(L["dealer_metric_margin"], f"{round(sale_initial_margin):,}")
+        st.metric(t_metric_margin, f"{round(sale_initial_margin):,}")
     with col_s3:
-        st.metric(L["dealer_metric_margin_rate"], f"{sale_margin_rate:.1f}")
+        st.metric(t_metric_margin_rate, f"{sale_margin_rate:.1f}")
 
     st.markdown(
-        f"- {L['dealer_sale_text_1']} ≈ {round(initial_unit_cost):,} USD\n"
-        f"- {L['dealer_sale_text_2']} ≈ {round(sale_initial_margin):,} USD, {sale_margin_rate:.1f}%\n"
-        f"- {L['dealer_sale_text_3']}"
+        f"- {t_sale_text_1} ≈ {round(initial_unit_cost):,} USD\n"
+        f"- {t_sale_text_2} ≈ {round(sale_initial_margin):,} USD, {sale_margin_rate:.1f}%\n"
+        f"- {t_sale_text_3}"
     )
 
     st.markdown("---")
 
     # ② 렌탈 모델
-    st.subheader(L["dealer_sec_rental"])
+    st.subheader(t_sec_rental)
 
     initial_invest_rental = initial_unit_cost
     annual_profit_rental = dealer_rental_fee * 12.0  # 서비스비 포함으로 가정
@@ -612,25 +683,24 @@ with tab_dealer:
 
     col_r1, col_r2, col_r3 = st.columns(3)
     with col_r1:
-        st.metric(L["dealer_metric_initial_invest"], f"{round(initial_invest_rental):,}")
+        st.metric(t_metric_initial_invest, f"{round(initial_invest_rental):,}")
     with col_r2:
-        st.metric(L["dealer_metric_annual_profit"], f"{round(annual_profit_rental):,}")
+        st.metric(t_metric_annual_profit, f"{round(annual_profit_rental):,}")
     with col_r3:
         if payback_years_dealer:
-            st.metric(L["dealer_metric_payback"], f"{payback_years_dealer:.1f}")
+            st.metric(t_metric_payback, f"{payback_years_dealer:.1f}")
         else:
-            st.metric(L["dealer_metric_payback"], "N/A")
+            st.metric(t_metric_payback, "N/A")
 
     st.markdown(
-        f"- {L['dealer_rental_text_1']}\n"
-        f"- {L['dealer_rental_text_2']} "
-        f"(≈ {round(total_profit_rental_contract):,} USD)"
+        f"- {t_rental_text_1}\n"
+        f"- {t_rental_text_2} (≈ {round(total_profit_rental_contract):,} USD)"
     )
 
     st.markdown("---")
 
     # 누적 현금흐름 그래프 (판매 vs 렌탈)
-    st.subheader(L["dealer_cashflow_title"])
+    st.subheader(t_cashflow_title)
 
     years_cf = list(range(0, rental_contract_years + 1))
     cash_rental = []
@@ -654,7 +724,7 @@ with tab_dealer:
     st.line_chart(df_cash)
 
     # 연도별 누적 순이익 (판매 vs 렌탈)
-    st.subheader(L["dealer_profit_title"])
+    st.subheader(t_profit_title)
 
     years_profit = list(range(1, rental_contract_years + 1))
     sale_profits = []
@@ -674,4 +744,4 @@ with tab_dealer:
 
     st.bar_chart(df_profit)
 
-    st.caption(L["dealer_footer"])
+    st.caption(t_footer)
