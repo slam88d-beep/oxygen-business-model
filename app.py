@@ -517,38 +517,34 @@ with tab_hospital:
 # 리테일러 / 파트너용 ROI 계산기
 # ====================================
 with tab_dealer:
-    st.title("리테일러 / 파트너 수익 모델 (Dealer ROI)")
+    st.title(L["dealer_tab_title"])
 
-    st.markdown(
-        "병원에 장비를 공급하는 리테일러(딜러) 입장에서 "
-        "단순 판매 vs 렌탈 모델의 수익성과 회수기간을 비교합니다."
-    )
-
+    st.markdown(L["dealer_intro"])
     st.markdown("---")
 
     col1, col2 = st.columns(2)
 
     with col1:
         factory_price = st.number_input(
-            "제조사 공급가 (USD)",
+            L["dealer_factory_price"],
             min_value=0.0,
             value=12000.0,
             step=500.0,
         )
         import_cost = st.number_input(
-            "수입·통관비용 (USD)",
+            L["dealer_import_cost"],
             min_value=0.0,
             value=1000.0,
             step=100.0,
         )
         dealer_sale_price = st.number_input(
-            "병원 판매가 (USD)",
+            L["dealer_sale_price"],
             min_value=0.0,
             value=18000.0,
             step=500.0,
         )
         dealer_install_cost = st.number_input(
-            "설치·교육 등 초기 비용 (USD, 일회성)",
+            L["dealer_install_cost"],
             min_value=0.0,
             value=500.0,
             step=100.0,
@@ -556,19 +552,19 @@ with tab_dealer:
 
     with col2:
         dealer_annual_service_cost = st.number_input(
-            "연간 서비스·유지보수비용 (판매모델용, USD/년)\n1년차는 무상 워런티, 2년차부터 발생",
+            L["dealer_annual_service_cost"],
             min_value=0.0,
             value=800.0,
             step=100.0,
         )
         dealer_rental_fee = st.number_input(
-            "병원 월 렌탈료 (USD)",
+            L["dealer_rental_fee"],
             min_value=0.0,
             value=2500.0,
             step=100.0,
         )
         rental_contract_years = st.number_input(
-            "렌탈 계약기간 (년)",
+            L["dealer_contract_years"],
             min_value=1,
             max_value=10,
             value=5,
@@ -581,31 +577,29 @@ with tab_dealer:
     initial_unit_cost = factory_price + import_cost + dealer_install_cost
 
     # ① 단순 판매 모델
-    st.subheader("1) 단순 판매 모델")
+    st.subheader(L["dealer_sec_sale"])
 
     sale_initial_margin = dealer_sale_price - initial_unit_cost
     sale_margin_rate = (sale_initial_margin / dealer_sale_price * 100.0) if dealer_sale_price > 0 else 0.0
 
     col_s1, col_s2, col_s3 = st.columns(3)
     with col_s1:
-        st.metric("초기 총 원가 (USD)", f"{round(initial_unit_cost):,}")
+        st.metric(L["dealer_metric_initial_cost"], f"{round(initial_unit_cost):,}")
     with col_s2:
-        st.metric("한 대당 초기 이익 (USD)", f"{round(sale_initial_margin):,}")
+        st.metric(L["dealer_metric_margin"], f"{round(sale_initial_margin):,}")
     with col_s3:
-        st.metric("마진율 (%)", f"{sale_margin_rate:.1f}")
+        st.metric(L["dealer_metric_margin_rate"], f"{sale_margin_rate:.1f}")
 
     st.markdown(
-        f"- 공급가 + 통관 + 설치를 포함한 한 대당 총 원가는 약 {round(initial_unit_cost):,} USD 입니다.\n"
-        f"- 병원에 {round(dealer_sale_price):,} USD에 판매하면 초기 이익은 약 "
-        f"{round(sale_initial_margin):,} USD, 마진율은 약 {sale_margin_rate:.1f}% 입니다.\n"
-        f"- 1년차는 무상 워런티, 2년차부터 연간 {round(dealer_annual_service_cost):,} USD의 "
-        f"서비스/유지보수 비용이 발생한다고 가정합니다."
+        f"- {L['dealer_sale_text_1']} ≈ {round(initial_unit_cost):,} USD\n"
+        f"- {L['dealer_sale_text_2']} ≈ {round(sale_initial_margin):,} USD, {sale_margin_rate:.1f}%\n"
+        f"- {L['dealer_sale_text_3']}"
     )
 
     st.markdown("---")
 
     # ② 렌탈 모델
-    st.subheader("2) 렌탈 모델")
+    st.subheader(L["dealer_sec_rental"])
 
     initial_invest_rental = initial_unit_cost
     annual_profit_rental = dealer_rental_fee * 12.0  # 서비스비 포함으로 가정
@@ -618,26 +612,25 @@ with tab_dealer:
 
     col_r1, col_r2, col_r3 = st.columns(3)
     with col_r1:
-        st.metric("초기 투자금 (USD)", f"{round(initial_invest_rental):,}")
+        st.metric(L["dealer_metric_initial_invest"], f"{round(initial_invest_rental):,}")
     with col_r2:
-        st.metric("연간 순이익 (USD)", f"{round(annual_profit_rental):,}")
+        st.metric(L["dealer_metric_annual_profit"], f"{round(annual_profit_rental):,}")
     with col_r3:
         if payback_years_dealer:
-            st.metric("투자 회수기간 (년)", f"{payback_years_dealer:.1f}")
+            st.metric(L["dealer_metric_payback"], f"{payback_years_dealer:.1f}")
         else:
-            st.metric("투자 회수기간 (년)", "N/A")
+            st.metric(L["dealer_metric_payback"], "N/A")
 
     st.markdown(
-        f"- 렌탈 1대 기준 초기 투자금은 {round(initial_invest_rental):,} USD 입니다.\n"
-        f"- 월 렌탈료 기준 연간 순이익은 약 {round(annual_profit_rental):,} USD 입니다.\n"
-        f"- 계약 {rental_contract_years}년 기준 예상 누적 순이익은 "
-        f"{round(total_profit_rental_contract):,} USD 입니다."
+        f"- {L['dealer_rental_text_1']}\n"
+        f"- {L['dealer_rental_text_2']} "
+        f"(≈ {round(total_profit_rental_contract):,} USD)"
     )
 
     st.markdown("---")
 
     # 누적 현금흐름 그래프 (판매 vs 렌탈)
-    st.subheader("누적 현금흐름 (판매 vs 렌탈)")
+    st.subheader(L["dealer_cashflow_title"])
 
     years_cf = list(range(0, rental_contract_years + 1))
     cash_rental = []
@@ -661,7 +654,7 @@ with tab_dealer:
     st.line_chart(df_cash)
 
     # 연도별 누적 순이익 (판매 vs 렌탈)
-    st.subheader("연도별 누적 순이익 (판매 vs 렌탈)")
+    st.subheader(L["dealer_profit_title"])
 
     years_profit = list(range(1, rental_contract_years + 1))
     sale_profits = []
@@ -681,7 +674,4 @@ with tab_dealer:
 
     st.bar_chart(df_profit)
 
-    st.caption(
-        "이 탭은 리테일러(딜러) 입장에서 단순 판매와 렌탈의 장기 수익성을 비교하기 위한 도구입니다. "
-        "병원 관점의 ROI는 병원용 ROI 탭에서 확인하세요."
-    )
+    st.caption(L["dealer_footer"])
