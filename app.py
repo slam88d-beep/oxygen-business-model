@@ -765,3 +765,137 @@ with tab_dealer:
 
     st.caption(t_footer)
 
+with tab_sizing:
+    # -----------------------------
+    # 병원 규모 기반 수요 추정 & 모델 추천 (30 LPM / 60 LPM)
+    # -----------------------------
+    if language == "ko":
+        title = "병원 규모 기반 산소발생기 필요 수량 계산"
+        intro = "병원의 아울렛/ICU/수술실(OR) 규모를 바탕으로 예상 산소 수요(LPM)를 추정하고, 30LPM/60LPM 모델 필요 대수를 추천합니다."
+        sec1 = "1) 병원 규모 입력"
+        sec2 = "2) 수요 가정(조정 가능)"
+        sec3 = "3) 결과 및 추천"
+        outlets_label = "일반 병동 아울렛 개수 (개)"
+        icu_label = "ICU 베드(또는 ICU 아울렛) 개수 (개)"
+        or_label = "OR(수술실) 개수 (개)"
+        avg_outlet_lpm_label = "일반 아울렛 평균 사용량 (LPM/아울렛)"
+        avg_icu_lpm_label = "ICU 평균 사용량 (LPM/ICU)"
+        avg_or_lpm_label = "OR 평균 사용량 (LPM/OR)"
+        simult_label = "동시 사용률(%)"
+        safety_label = "안전계수(%)"
+        redundancy_label = "N+예비 대수 (대)"
+        u03_cap_label = "RAK-U03M2E 용량 (LPM)"
+        u06_cap_label = "RAK-U06M2E 용량 (LPM)"
+        demand_text = "예상 필요 유량"
+        rec_text = "추천"
+        explain_text = "계산 방식: (아울렛×가정LPM + ICU×가정LPM + OR×가정LPM) × 동시사용률 × 안전계수"
+    else:
+        title = "Sizing Recommendation by Hospital Scale"
+        intro = "Estimate oxygen demand (LPM) from outlets/ICU/OR and recommend required units for 30 LPM and 60 LPM models."
+        sec1 = "1) Hospital scale inputs"
+        sec2 = "2) Assumptions (adjustable)"
+        sec3 = "3) Results & recommendation"
+        outlets_label = "General ward outlets (count)"
+        icu_label = "ICU beds/outlets (count)"
+        or_label = "OR rooms (count)"
+        avg_outlet_lpm_label = "Avg usage per general outlet (LPM)"
+        avg_icu_lpm_label = "Avg usage per ICU (LPM)"
+        avg_or_lpm_label = "Avg usage per OR (LPM)"
+        simult_label = "Simultaneous usage rate (%)"
+        safety_label = "Safety factor (%)"
+        redundancy_label = "N+ standby units"
+        u03_cap_label = "RAK-U03M2E capacity (LPM)"
+        u06_cap_label = "RAK-U06M2E capacity (LPM)"
+        demand_text = "Estimated required flow"
+        rec_text = "Recommendation"
+        explain_text = "Formula: (Outlets×LPM + ICU×LPM + OR×LPM) × simult. rate × safety factor"
+
+    st.title(title)
+    st.caption(intro)
+
+    st.markdown("---")
+    st.subheader(sec1)
+
+    c1, c2, c3 = st.columns(3)
+    with c1:
+        outlets = st.number_input(outlets_label, min_value=0, value=50, step=1)
+    with c2:
+        icu = st.number_input(icu_label, min_value=0, value=10, step=1)
+    with c3:
+        or_rooms = st.number_input(or_label, min_value=0, value=2, step=1)
+
+    st.markdown("---")
+    st.subheader(sec2)
+
+    a1, a2, a3 = st.columns(3)
+    with a1:
+        avg_outlet_lpm = st.number_input(avg_outlet_lpm_label, min_value=0.0, value=3.0, step=0.5)
+        simult_rate = st.number_input(simult_label, min_value=1.0, max_value=100.0, value=40.0, step=5.0) / 100.0
+    with a2:
+        avg_icu_lpm = st.number_input(avg_icu_lpm_label, min_value=0.0, value=10.0, step=1.0)
+        safety_factor = st.number_input(safety_label, min_value=100.0, max_value=250.0, value=120.0, step=5.0) / 100.0
+    with a3:
+        avg_or_lpm = st.number_input(avg_or_lpm_label, min_value=0.0, value=15.0, step=1.0)
+        redundancy_n = st.number_input(redundancy_label, min_value=0, max_value=5, value=1, step=1)
+
+    # 모델 용량 (고정값이지만 수정 가능하게 열어둠)
+    b1, b2 = st.columns(2)
+    with b1:
+        cap_u03 = st.number_input(u03_cap_label, min_value=1.0, value=30.0, step=1.0)
+    with b2:
+        cap_u06 = st.number_input(u06_cap_label, min_value=1.0, value=60.0, step=1.0)
+
+    st.caption(explain_text)
+
+    # -----------------------------
+    # 계산
+    # -----------------------------
+    base_demand = outlets * avg_outlet_lpm + icu * avg_icu_lpm + or_rooms * avg_or_lpm
+    required_lpm = base_demand * simult_rate * safety_factor
+
+    # 필요 대수(예비 N대 추가)
+    import math
+    units_u03 = math.ceil(required_lpm / cap_u03) + int(redundancy_n)
+    units_u06 = math.ceil(required_lpm / cap_u06) + int(redundancy_n)
+
+    st.markdown("---")
+    st.subheader(sec3)
+
+    colA, colB, colC = st.columns(3)
+    with colA:
+        st.metric(demand_text + " (LPM)", f"{required_lpm:,.1f}")
+        st.caption(f"Base (no factors): {base_demand:,.1f} LPM")
+
+    with colB:
+        st.metric("RAK-U03M2E (30 LPM) 필요 수량" if language == "ko" else "RAK-U03M2E units needed", f"{units_u03} 대" if language == "ko" else f"{units_u03} units")
+
+    with colC:
+        st.metric("RAK-U06M2E (60 LPM) 필요 수량" if language == "ko" else "RAK-U06M2E units needed", f"{units_u06} 대" if language == "ko" else f"{units_u06} units")
+
+    # 추천 로직: "대수 최소" 기준으로 추천 (현장 설명에 단순/명확)
+    # (원하면 향후 CAPEX, 설치공간, 예비품, MTBF 등으로 가중치 확장 가능)
+    if units_u06 < units_u03:
+        rec_model = "RAK-U06M2E (60 LPM)"
+        rec_qty = units_u06
+    elif units_u03 < units_u06:
+        rec_model = "RAK-U03M2E (30 LPM)"
+        rec_qty = units_u03
+    else:
+        # 동일하면 60 LPM을 기본 추천(설치/운영 단순성)
+        rec_model = "RAK-U06M2E (60 LPM)"
+        rec_qty = units_u06
+
+    if language == "ko":
+        st.success(f"추천하는 제품의 종류 및 수량은 **{rec_model} {rec_qty}대** 입니다.")
+        st.write(
+            "참고: 실제 현장에서는 배관압력(MGPS), 피크 사용 패턴, 산소 순도/압력 요구, "
+            "백업 실린더/LOX 운용 여부, 전원 안정성 등을 함께 반영해 최종 설계를 확정하는 것을 권장합니다."
+        )
+    else:
+        st.success(f"Recommended model & quantity: **{rec_model} × {rec_qty}**.")
+        st.write(
+            "Note: Final sizing should consider peak usage profile, MGPS pressure requirement, "
+            "backup source strategy (cylinder/LOX), and power stability."
+        )
+
+
