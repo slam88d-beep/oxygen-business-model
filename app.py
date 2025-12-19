@@ -129,7 +129,7 @@ st.sidebar.subheader(L["sidebar_basic"])
 st.sidebar.write(L["sidebar_hint"])
 
 # ---- 탭 구성 ----
-tab_hospital, tab_dealer = st.tabs(["병원용 ROI", "리테일러 ROI"])
+tab_hospital, tab_dealer = st.tabs(["병원용 ROI", "리테일러 ROI", "병원 규모 기반 추천"])
 
 # ================================
 # 병원용 ROI 계산기
